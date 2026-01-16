@@ -1,5 +1,5 @@
-import { DamaPiece } from '../pieces/damaPiece';
-import { PieceType } from '../pieces/pieceType';
+import { DamaPiece } from '../src/pieces/damaPiece';
+import { PieceType } from '../src/pieces/pieceType';
 
 describe('Piece', () => {
   test('creates a piece with player type', () => {

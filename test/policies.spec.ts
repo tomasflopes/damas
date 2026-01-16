@@ -1,7 +1,7 @@
-import { DamaPiece } from '../pieces/damaPiece.js';
-import { DamaPromotionPolicy } from '../policies/promotion/damaPromotionPolicy.js';
-import { AlternatingTurnPolicy } from '../policies/turn/alternatingTurnPolicy.js';
-import { FreeTurnPolicy } from '../policies/turn/freeTurnPolicy.js';
+import { DamaPiece } from '../src/pieces/damaPiece.js';
+import { DamaPromotionPolicy } from '../src/policies/promotion/damaPromotionPolicy.js';
+import { AlternatingTurnPolicy } from '../src/policies/turn/alternatingTurnPolicy.js';
+import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
 
 describe('DefaultPromotionPolicy', () => {
   test('promotes light piece at row 0', () => {

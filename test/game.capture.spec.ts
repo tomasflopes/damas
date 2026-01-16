@@ -1,5 +1,5 @@
-import { createGame } from '../game/gameFactory.js';
-import { FreeTurnPolicy } from '../policies/turn/freeTurnPolicy.js';
+import { createGame } from '../src/game/gameFactory.js';
+import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
 
 const createTestGame = () => createGame({ turnPolicy: new FreeTurnPolicy() });
 

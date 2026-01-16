@@ -1,6 +1,6 @@
-import { DamaBoard } from '../board/damaBoard.js';
-import { DamaMoveGenerator } from '../generators/damaMoveGenerator.js';
-import { DamaPiece } from '../pieces/damaPiece.js';
+import { DamaBoard } from '../src/board/damaBoard.js';
+import { DamaMoveGenerator } from '../src/generators/damaMoveGenerator.js';
+import { DamaPiece } from '../src/pieces/damaPiece.js';
 
 describe('CheckersMoveGenerator', () => {
   test('generates pawn forward moves for light pieces', () => {

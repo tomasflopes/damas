@@ -1,5 +1,5 @@
-import { DamaBoard } from '../board/damaBoard.js';
-import { DamaPiece } from '../pieces/damaPiece.js';
+import { DamaBoard } from '../src/board/damaBoard.js';
+import { DamaPiece } from '../src/pieces/damaPiece.js';
 
 describe('Board', () => {
   describe('Board Initialization', () => {
