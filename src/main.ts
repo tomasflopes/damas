@@ -1,4 +1,5 @@
 import { createGame } from './game/gameFactory.js';
+import { PieceType } from './pieces/pieceType.js';
 import { Coord } from './types.js';
 
 const game = createGame();
@@ -37,7 +38,7 @@ function render() {
         const colorClass = piece.player === 'light' ? 'piece-light' : 'piece-dark';
         token.classList.add(colorClass);
 
-        if (piece.isKing) token.classList.add('king');
+        if (piece.type === PieceType.KING) token.classList.add('king');
 
         if (lastMovedTo && lastMovedTo.row === row && lastMovedTo.col === col) {
           token.classList.add('just-moved');

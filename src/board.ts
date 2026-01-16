@@ -1,4 +1,5 @@
-import { Piece } from './piece.js';
+import { DamaPiece } from './pieces/damaPiece';
+import { Piece } from './pieces/piece';
 
 export const BOARD_SIZE = 8;
 
@@ -49,9 +50,9 @@ export class DamaBoard implements Board {
         if (!this.isDarkSquare(row, col)) continue;
 
         if (row < rowsPerSide) {
-          this.grid[row][col] = new Piece('dark');
+          this.grid[row][col] = new DamaPiece('dark');
         } else if (row >= BOARD_SIZE - rowsPerSide) {
-          this.grid[row][col] = new Piece('light');
+          this.grid[row][col] = new DamaPiece('light');
         }
       }
     }

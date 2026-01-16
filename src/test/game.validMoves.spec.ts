@@ -1,5 +1,5 @@
 import { createGame } from '../game/gameFactory.js';
-import { Piece } from '../piece.js';
+import { DamaPiece } from '../pieces/damaPiece.js';
 import { FreeTurnPolicy } from '../policies/turn/freeTurnPolicy.js';
 
 const createTestGame = () => createGame({ turnPolicy: new FreeTurnPolicy() });
@@ -45,7 +45,7 @@ describe('Game - Valid Moves', () => {
   test('king has correct valid moves', () => {
     const game = createTestGame();
     game.clearBoard();
-    const king = new Piece('dark', true);
+    const king = new DamaPiece('dark', true);
     game.setPiece(4, 3, king);
 
     const moves = game.getValidMoves({ row: 4, col: 3 });
@@ -59,9 +59,9 @@ describe('Game - Valid Moves', () => {
   test('king capture move is detected', () => {
     const game = createTestGame();
     game.clearBoard();
-    const king = new Piece('light', true);
+    const king = new DamaPiece('light', true);
     game.setPiece(4, 3, king);
-    game.setPiece(2, 1, new Piece('dark'));
+    game.setPiece(2, 1, new DamaPiece('dark'));
 
     const moves = game.getValidMoves({ row: 4, col: 3 });
     const captureMove = moves.find((m) => m.captured);
@@ -75,10 +75,10 @@ describe('Game - Valid Moves', () => {
   test('king should not be able to jump over multiple pieces', () => {
     const game = createTestGame();
     game.clearBoard();
-    const king = new Piece('dark', true);
+    const king = new DamaPiece('dark', true);
     game.setPiece(4, 3, king);
-    game.setPiece(3, 2, new Piece('light'));
-    game.setPiece(2, 1, new Piece('light'));
+    game.setPiece(3, 2, new DamaPiece('light'));
+    game.setPiece(2, 1, new DamaPiece('light'));
 
     const moves = game.getValidMoves({ row: 4, col: 3 });
     const invalidCaptureMove = moves.find((m) => m.captured && m.to.row === 1 && m.to.col === 0);

@@ -1,5 +1,6 @@
 import { DamaBoard } from '../board.js';
-import { Piece, Player } from '../piece.js';
+import { Player } from '../pieces/damaPiece.js';
+import { Piece } from '../pieces/piece.js';
 import { MoveService } from '../services/moveService.js';
 import { Coord, MoveOption, TurnPolicy } from '../types.js';
 

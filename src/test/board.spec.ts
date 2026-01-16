@@ -1,5 +1,5 @@
 import { DamaBoard } from '../board.js';
-import { Piece } from '../piece.js';
+import { DamaPiece } from '../pieces/damaPiece.js';
 
 describe('Board', () => {
   describe('Board Initialization', () => {
@@ -73,7 +73,7 @@ describe('Board', () => {
     test('setPiece updates board state', () => {
       const board = new DamaBoard();
       board.clearBoard();
-      const piece = new Piece('light');
+      const piece = new DamaPiece('light');
       board.setPiece(3, 3, piece);
       expect(board.getPiece(3, 3)).toBe(piece);
     });

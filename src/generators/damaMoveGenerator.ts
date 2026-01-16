@@ -1,15 +1,18 @@
 import { Board } from '../board.js';
-import { Piece } from '../piece.js';
+import { Piece } from '../pieces/piece.js';
+import { PieceType } from '../pieces/pieceType.js';
 import { Coord, MoveGenerator, MoveOption } from '../types.js';
 
-export class DefaultMoveGenerator implements MoveGenerator {
+export class DamaMoveGenerator implements MoveGenerator {
   constructor(private readonly board: Board) {}
 
   getValidMoves(from: Coord): MoveOption[] {
     const piece = this.board.getPiece(from.row, from.col);
     if (!piece) return [];
 
-    return piece.isKing ? this.generateKingMoves(from, piece) : this.generatePawnMoves(from, piece);
+    return piece.type === PieceType.KING
+      ? this.generateKingMoves(from, piece)
+      : this.generatePawnMoves(from, piece);
   }
 
   private generatePawnMoves(from: Coord, piece: Piece): MoveOption[] {

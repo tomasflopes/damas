@@ -1,7 +1,7 @@
 import { DamaBoard } from '../board.js';
-import { DefaultMoveGenerator } from '../generators/moveGenerator.js';
-import { Player } from '../piece.js';
-import { DefaultPromotionPolicy } from '../policies/promotionPolicy.js';
+import { DamaMoveGenerator } from '../generators/damaMoveGenerator.js';
+import { Player } from '../pieces/damaPiece.js';
+import { DamaPromotionPolicy } from '../policies/promotion/damaPromotionPolicy.js';
 import { AlternatingTurnPolicy } from '../policies/turn/alternatingTurnPolicy.js';
 import { MoveService } from '../services/moveService.js';
 import { MoveGenerator, PromotionPolicy, TurnPolicy } from '../types.js';
@@ -16,8 +16,8 @@ export function createGame(options?: {
 }): Game {
   const board = options?.board ?? new DamaBoard();
 
-  const generator = options?.moveGenerator ?? new DefaultMoveGenerator(board);
-  const promotion = options?.promotionPolicy ?? new DefaultPromotionPolicy();
+  const generator = options?.moveGenerator ?? new DamaMoveGenerator(board);
+  const promotion = options?.promotionPolicy ?? new DamaPromotionPolicy();
   const moveService = new MoveService(board, generator, promotion);
 
   const turnPolicy = options?.turnPolicy ?? new AlternatingTurnPolicy();
