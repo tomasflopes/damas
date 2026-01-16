@@ -2,11 +2,16 @@ node_modules
 dist
 
 .env
+
 .DS_Store
 .vscode
+.idea
+
 coverage
+
 npm-debug.log
 yarn-error.log
 pnpm-debug.log
-.idea
+
+*.local.js
 *.local.ts
