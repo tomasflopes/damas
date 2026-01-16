@@ -1,16 +1,8 @@
-import { DamaPiece } from './pieces/damaPiece';
-import { Piece } from './pieces/piece';
+import { DamaPiece } from '../pieces/damaPiece.js';
+import { Piece } from '../pieces/piece.js';
+import { Board } from './board.js';
 
 export const BOARD_SIZE = 8;
-
-export interface Board {
-  readonly size: number;
-  getPiece(row: number, col: number): Piece | null;
-  setPiece(row: number, col: number, piece: Piece | null): void;
-  clearBoard(): void;
-  inBounds(row: number, col: number): boolean;
-  isDarkSquare(row: number, col: number): boolean;
-}
 
 export class DamaBoard implements Board {
   private grid: Array<Array<Piece | null>>;

@@ -1,4 +1,4 @@
-import { PieceType } from './pieceType';
+import { PieceType } from './pieceType.js';
 
 export type Player = 'light' | 'dark';
 

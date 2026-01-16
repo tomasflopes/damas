@@ -1,6 +1,6 @@
-import { DamaBoard } from '../board.js';
-import { Player } from '../pieces/damaPiece.js';
-import { Piece } from '../pieces/piece.js';
+import { Board } from '../board/board.js';
+import { Piece, Player } from '../pieces/piece.js';
+import { AudioService } from '../services/audio/audioService.js';
 import { MoveService } from '../services/moveService.js';
 import { Coord, MoveOption, TurnPolicy } from '../types.js';
 
@@ -8,10 +8,11 @@ export class Game {
   private currentPlayer: Player;
 
   constructor(
-    private readonly board: DamaBoard,
+    private readonly board: Board,
     private readonly moveService: MoveService,
     private readonly turnPolicy: TurnPolicy,
     startingPlayer: Player = 'light',
+    private readonly audioService: AudioService,
   ) {
     this.currentPlayer = startingPlayer;
   }
@@ -22,6 +23,10 @@ export class Game {
 
   get player(): Player {
     return this.currentPlayer;
+  }
+
+  get audio(): AudioService {
+    return this.audioService;
   }
 
   getPiece(row: number, col: number) {

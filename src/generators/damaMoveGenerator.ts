@@ -1,4 +1,4 @@
-import { Board } from '../board.js';
+import { Board } from '../board/board.js';
 import { Piece } from '../pieces/piece.js';
 import { PieceType } from '../pieces/pieceType.js';
 import { Coord, MoveGenerator, MoveOption } from '../types.js';
@@ -64,7 +64,7 @@ export class DamaMoveGenerator implements MoveGenerator {
           moves.push({ to: { row: r, col: c }, captured });
         } else {
           if (occupant.player === piece.player) break;
-          if (captured) break; // already captured one piece
+          if (captured) break;
           captured = { row: r, col: c };
         }
         r += dr;

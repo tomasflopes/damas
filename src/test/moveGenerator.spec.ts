@@ -1,4 +1,4 @@
-import { DamaBoard } from '../board.js';
+import { DamaBoard } from '../board/damaBoard.js';
 import { DamaMoveGenerator } from '../generators/damaMoveGenerator.js';
 import { DamaPiece } from '../pieces/damaPiece.js';
 

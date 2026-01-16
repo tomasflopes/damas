@@ -1,4 +1,4 @@
-import { DamaBoard } from '../board.js';
+import { DamaBoard } from '../board/damaBoard.js';
 import { DamaPiece } from '../pieces/damaPiece.js';
 
 describe('Board', () => {

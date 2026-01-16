@@ -10,6 +10,23 @@ let lastMovedTo: Coord | null = null;
 const boardEl = document.querySelector<HTMLDivElement>('#board');
 const turnLabel = document.querySelector<HTMLSpanElement>('#turn');
 const hintLabel = document.querySelector<HTMLSpanElement>('#hint');
+const muteButton = document.querySelector<HTMLButtonElement>('#mute');
+
+function updateMuteButton() {
+  if (!muteButton) return;
+  const muted = game.audio.isMuted();
+  muteButton.textContent = muted ? 'Sound Off' : 'Mute';
+  muteButton.setAttribute('aria-pressed', String(muted));
+}
+
+if (muteButton) {
+  muteButton.addEventListener('click', () => {
+    game.audio.toggleMute();
+    updateMuteButton();
+  });
+
+  updateMuteButton();
+}
 
 function render() {
   if (!boardEl) return;
@@ -80,7 +97,16 @@ function handleSquareClick(event: MouseEvent) {
   const targetMove = validTargets.find((m) => m.to.row === row && m.to.col === col);
 
   if (selected && targetMove) {
+    const movingPiece = game.getPiece(selected.row, selected.col);
+    const wasKing = movingPiece?.type === PieceType.KING;
+
     game.movePiece(selected, targetMove.to);
+
+    if (targetMove.captured) game.audio.playCapture();
+    else game.audio.playMove();
+
+    const movedPiece = game.getPiece(targetMove.to.row, targetMove.to.col);
+    if (!wasKing && movedPiece?.type === PieceType.KING) game.audio.playPromotion();
     lastMovedTo = targetMove.to;
     selected = null;
     validTargets = [];
@@ -98,6 +124,7 @@ function handleSquareClick(event: MouseEvent) {
     selected = null;
     validTargets = [];
 
+    game.audio.playIllegal();
     setHint('Select your own piece.');
   }
 
@@ -112,6 +139,7 @@ function handleDragStart(event: DragEvent) {
   const piece = game.getPiece(row, col);
 
   if (!piece || piece.player !== game.player) {
+    game.audio.playIllegal();
     event.preventDefault();
     return;
   }
@@ -142,7 +170,16 @@ function handleDrop(event: DragEvent) {
   const targetMove = validTargets.find((m) => m.to.row === row && m.to.col === col);
 
   if (targetMove) {
+    const movingPiece = game.getPiece(selected.row, selected.col);
+    const wasKing = movingPiece?.type === PieceType.KING;
+
     game.movePiece(selected, targetMove.to);
+
+    if (targetMove.captured) game.audio.playCapture();
+    else game.audio.playMove();
+
+    const movedPiece = game.getPiece(targetMove.to.row, targetMove.to.col);
+    if (!wasKing && movedPiece?.type === PieceType.KING) game.audio.playPromotion();
     lastMovedTo = targetMove.to;
     selected = null;
     validTargets = [];
@@ -150,6 +187,7 @@ function handleDrop(event: DragEvent) {
     return;
   }
 
+  game.audio.playIllegal();
   setHint('Invalid drop. Try a highlighted square.');
   render();
 }

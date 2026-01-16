@@ -1,4 +1,4 @@
-import { Player } from '../../pieces/damaPiece.js';
+import { Player } from '../../pieces/piece.js';
 import { TurnPolicy } from '../../types.js';
 
 export class FreeTurnPolicy implements TurnPolicy {

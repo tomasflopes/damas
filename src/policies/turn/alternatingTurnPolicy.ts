@@ -1,5 +1,4 @@
-import { Player } from '../../pieces/damaPiece.js';
-import { Piece } from '../../pieces/piece.js';
+import { Piece, Player } from '../../pieces/piece.js';
 import { TurnPolicy } from '../../types.js';
 
 export class AlternatingTurnPolicy implements TurnPolicy {

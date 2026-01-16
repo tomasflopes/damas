@@ -1,5 +1,4 @@
-import { Player } from './pieces/damaPiece.js';
-import { Piece } from './pieces/piece.js';
+import { Piece, Player } from './pieces/piece.js';
 
 export type MoveOption = { to: Coord; captured?: Coord };
 export type MoveResult = { success: boolean; captured?: Coord };

@@ -1,7 +1,5 @@
-import { Piece } from './piece';
-import { PieceType } from './pieceType';
-
-export type Player = 'light' | 'dark';
+import { Piece, Player } from './piece.js';
+import { PieceType } from './pieceType.js';
 
 export class DamaPiece implements Piece {
   readonly player: Player;
