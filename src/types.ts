@@ -1,4 +1,4 @@
-import { Piece, Player } from "./piece.js";
+import { Piece, Player } from './piece.js';
 
 export type MoveOption = { to: Coord; captured?: Coord };
 export type MoveResult = { success: boolean; captured?: Coord };
@@ -8,11 +8,7 @@ export interface MoveGenerator {
 }
 
 export interface PromotionPolicy {
-  shouldPromote(
-    piece: Piece,
-    destinationRow: number,
-    boardSize: number
-  ): boolean;
+  shouldPromote(piece: Piece, destinationRow: number, boardSize: number): boolean;
 }
 
 export interface TurnPolicy {

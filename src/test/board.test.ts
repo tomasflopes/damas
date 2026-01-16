@@ -1,57 +1,57 @@
-import { createGame } from "../game/gameFactory.js";
-import { Piece } from "../piece.js";
-import { FreeTurnPolicy } from "../policies/turn/freeTurnPolicy.js";
+import { createGame } from '../game/gameFactory.js';
+import { Piece } from '../piece.js';
+import { FreeTurnPolicy } from '../policies/turn/freeTurnPolicy.js';
 
 const createTestGame = () => createGame({ turnPolicy: new FreeTurnPolicy() });
 
-describe("Board", () => {
-  describe("Basic Movement", () => {
-    test("light piece can move diagonally forward-left on dark square", () => {
+describe('Board', () => {
+  describe('Basic Movement', () => {
+    test('light piece can move diagonally forward-left on dark square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       expect(result).toBe(true);
-      expect(game.getPiece(4, 1)?.player).toBe("light");
+      expect(game.getPiece(4, 1)?.player).toBe('light');
       expect(game.getPiece(5, 0)).toBeNull();
     });
 
-    test("light piece can move diagonally forward-right on dark square", () => {
+    test('light piece can move diagonally forward-right on dark square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 5, col: 2 }, { row: 4, col: 3 });
       expect(result).toBe(true);
-      expect(game.getPiece(4, 3)?.player).toBe("light");
+      expect(game.getPiece(4, 3)?.player).toBe('light');
       expect(game.getPiece(5, 2)).toBeNull();
     });
 
-    test("dark piece can move diagonally forward-left on dark square", () => {
+    test('dark piece can move diagonally forward-left on dark square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
       expect(result).toBe(true);
-      expect(game.getPiece(3, 0)?.player).toBe("dark");
+      expect(game.getPiece(3, 0)?.player).toBe('dark');
       expect(game.getPiece(2, 1)).toBeNull();
     });
 
-    test("dark piece can move diagonally forward-right on dark square", () => {
+    test('dark piece can move diagonally forward-right on dark square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 2, col: 1 }, { row: 3, col: 2 });
       expect(result).toBe(true);
-      expect(game.getPiece(3, 2)?.player).toBe("dark");
+      expect(game.getPiece(3, 2)?.player).toBe('dark');
       expect(game.getPiece(2, 1)).toBeNull();
     });
 
-    test("piece cannot move backwards (non-king)", () => {
+    test('piece cannot move backwards (non-king)', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       const result = game.movePiece({ row: 4, col: 1 }, { row: 5, col: 0 });
       expect(result).toBe(false);
     });
 
-    test("piece cannot move to light square", () => {
+    test('piece cannot move to light square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 5, col: 0 }, { row: 4, col: 0 });
       expect(result).toBe(false);
     });
 
-    test("piece cannot move to occupied square", () => {
+    test('piece cannot move to occupied square', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
@@ -59,21 +59,21 @@ describe("Board", () => {
       expect(result).toBe(false);
     });
 
-    test("cannot move from empty square", () => {
+    test('cannot move from empty square', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 4, col: 1 }, { row: 3, col: 0 });
       expect(result).toBe(false);
     });
 
-    test("cannot move out of bounds", () => {
+    test('cannot move out of bounds', () => {
       const game = createTestGame();
       const result = game.movePiece({ row: 5, col: 0 }, { row: -1, col: -1 });
       expect(result).toBe(false);
     });
   });
 
-  describe("Capture Logic", () => {
-    test("light piece can capture dark piece", () => {
+  describe('Capture Logic', () => {
+    test('light piece can capture dark piece', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
@@ -84,12 +84,12 @@ describe("Board", () => {
 
       const result = game2.movePiece({ row: 4, col: 3 }, { row: 2, col: 1 });
       expect(result).toBe(true);
-      expect(game2.getPiece(2, 1)?.player).toBe("light");
+      expect(game2.getPiece(2, 1)?.player).toBe('light');
       expect(game2.getPiece(3, 2)).toBeNull();
       expect(game2.getPiece(4, 3)).toBeNull();
     });
 
-    test("dark piece can capture light piece", () => {
+    test('dark piece can capture light piece', () => {
       const game = createTestGame();
       game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
@@ -101,11 +101,11 @@ describe("Board", () => {
 
       const result = game2.movePiece({ row: 3, col: 2 }, { row: 5, col: 0 });
       expect(result).toBe(true);
-      expect(game2.getPiece(5, 0)?.player).toBe("dark");
+      expect(game2.getPiece(5, 0)?.player).toBe('dark');
       expect(game2.getPiece(4, 1)).toBeNull();
     });
 
-    test("cannot capture own piece", () => {
+    test('cannot capture own piece', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       game.movePiece({ row: 5, col: 2 }, { row: 4, col: 3 });
@@ -115,7 +115,7 @@ describe("Board", () => {
       expect(result).toBe(false);
     });
 
-    test("cannot capture if landing square is occupied", () => {
+    test('cannot capture if landing square is occupied', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       game.movePiece({ row: 2, col: 1 }, { row: 3, col: 2 });
@@ -127,56 +127,50 @@ describe("Board", () => {
     });
   });
 
-  describe("King Promotion", () => {
-    test("light piece promotes to king when reaching row 0", () => {
+  describe('King Promotion', () => {
+    test('light piece promotes to king when reaching row 0', () => {
       const game = createTestGame();
       game.clearBoard();
-      game.setPiece(1, 0, new Piece("light"));
+      game.setPiece(1, 0, new Piece('light'));
 
       const result = game.movePiece({ row: 1, col: 0 }, { row: 0, col: 1 });
       expect(result).toBe(true);
 
       const piece = game.getPiece(0, 1);
       expect(piece?.isKing).toBe(true);
-      expect(piece?.player).toBe("light");
+      expect(piece?.player).toBe('light');
     });
 
-    test("dark piece promotes to king when reaching row 7", () => {
+    test('dark piece promotes to king when reaching row 7', () => {
       const game = createTestGame();
       game.clearBoard();
-      game.setPiece(6, 1, new Piece("dark"));
+      game.setPiece(6, 1, new Piece('dark'));
 
       const result = game.movePiece({ row: 6, col: 1 }, { row: 7, col: 0 });
       expect(result).toBe(true);
 
       const piece = game.getPiece(7, 0);
       expect(piece?.isKing).toBe(true);
-      expect(piece?.player).toBe("dark");
+      expect(piece?.player).toBe('dark');
     });
 
-    test("king can move backwards", () => {
+    test('king can move backwards', () => {
       const game = createTestGame();
       game.clearBoard();
-      const king = new Piece("light", true);
+      const king = new Piece('light', true);
       game.setPiece(3, 2, king);
 
-      const resultForward = game.movePiece(
-        { row: 3, col: 2 },
-        { row: 2, col: 3 }
-      );
+      const resultForward = game.movePiece({ row: 3, col: 2 }, { row: 2, col: 3 });
       expect(resultForward).toBe(true);
 
-      const resultBackward = game.movePiece(
-        { row: 2, col: 3 },
-        { row: 3, col: 2 }
-      );
+      const resultBackward = game.movePiece({ row: 2, col: 3 }, { row: 3, col: 2 });
       expect(resultBackward).toBe(true);
       expect(game.getPiece(3, 2)?.isKing).toBe(true);
     });
   });
 
-  describe("Valid Moves Detection", () => {
-    test("getValidMoves returns correct moves for light piece", () => {
+  describe('Valid Moves Detection', () => {
+    test('getValidMoves returns correct moves for light piece', () => {
       const game = createTestGame();
       const moves = game.getValidMoves({ row: 5, col: 0 });
 
@@ -184,13 +178,13 @@ describe("Board", () => {
       expect(moves.some((m) => m.to.row === 4 && m.to.col === 1)).toBe(true);
     });
 
-    test("getValidMoves returns empty for empty square", () => {
+    test('getValidMoves returns empty for empty square', () => {
       const game = createTestGame();
       const moves = game.getValidMoves({ row: 4, col: 1 });
       expect(moves.length).toBe(0);
     });
 
-    test("getValidMoves includes capture when available", () => {
+    test('getValidMoves includes capture when available', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 2 }, { row: 4, col: 3 });
       game.movePiece({ row: 2, col: 1 }, { row: 3, col: 2 });
@@ -205,7 +199,7 @@ describe("Board", () => {
       expect(captureMove?.captured?.col).toBe(2);
     });
 
-    test("piece blocked by friendly piece has no moves", () => {
+    test('piece blocked by friendly piece has no moves', () => {
       const game = createTestGame();
       game.movePiece({ row: 5, col: 2 }, { row: 4, col: 1 });
 
@@ -213,10 +207,10 @@ describe("Board", () => {
       expect(moves.length).toBe(0);
     });
 
-    test("king has correct valid moves", () => {
+    test('king has correct valid moves', () => {
       const game = createTestGame();
       game.clearBoard();
-      const king = new Piece("dark", true);
+      const king = new Piece('dark', true);
       game.setPiece(4, 3, king);
 
       const moves = game.getValidMoves({ row: 4, col: 3 });
@@ -227,12 +221,12 @@ describe("Board", () => {
       expect(moves.some((m) => m.to.row === 7 && m.to.col === 6)).toBe(true);
     });
 
-    test("king capture move is detected", () => {
+    test('king capture move is detected', () => {
       const game = createTestGame();
       game.clearBoard();
-      const king = new Piece("light", true);
+      const king = new Piece('light', true);
       game.setPiece(4, 3, king);
-      game.setPiece(2, 1, new Piece("dark"));
+      game.setPiece(2, 1, new Piece('dark'));
 
       const moves = game.getValidMoves({ row: 4, col: 3 });
       const captureMove = moves.find((m) => m.captured);
@@ -243,24 +237,22 @@ describe("Board", () => {
       expect(captureMove?.captured?.col).toBe(1);
     });
 
-    test("king should not be able to jump over multiple pieces", () => {
+    test('king should not be able to jump over multiple pieces', () => {
       const game = createTestGame();
       game.clearBoard();
-      const king = new Piece("dark", true);
+      const king = new Piece('dark', true);
       game.setPiece(4, 3, king);
-      game.setPiece(3, 2, new Piece("light"));
-      game.setPiece(2, 1, new Piece("light"));
+      game.setPiece(3, 2, new Piece('light'));
+      game.setPiece(2, 1, new Piece('light'));
 
       const moves = game.getValidMoves({ row: 4, col: 3 });
-      const invalidCaptureMove = moves.find(
-        (m) => m.captured && m.to.row === 1 && m.to.col === 0
-      );
+      const invalidCaptureMove = moves.find((m) => m.captured && m.to.row === 1 && m.to.col === 0);
       expect(invalidCaptureMove).toBeUndefined();
     });
   });
 
-  describe("Board Initialization", () => {
-    test("board initializes with correct number of pieces", () => {
+  describe('Board Initialization', () => {
+    test('board initializes with correct number of pieces', () => {
       const game = createTestGame();
       let lightCount = 0;
       let darkCount = 0;
@@ -269,7 +261,7 @@ describe("Board", () => {
         for (let col = 0; col < game.size; col++) {
           const piece = game.getPiece(row, col);
           if (piece) {
-            if (piece.player === "light") lightCount++;
+            if (piece.player === 'light') lightCount++;
             else darkCount++;
           }
         }
@@ -279,7 +271,7 @@ describe("Board", () => {
       expect(darkCount).toBe(12);
     });
 
-    test("pieces only on dark squares initially", () => {
+    test('pieces only on dark squares initially', () => {
       const game = createTestGame();
 
       for (let row = 0; row < game.size; row++) {
@@ -292,27 +284,27 @@ describe("Board", () => {
       }
     });
 
-    test("light pieces start in bottom 3 rows", () => {
+    test('light pieces start in bottom 3 rows', () => {
       const game = createTestGame();
 
       for (let row = 5; row < 8; row++) {
         for (let col = 0; col < game.size; col++) {
           const piece = game.getPiece(row, col);
           if (piece) {
-            expect(piece.player).toBe("light");
+            expect(piece.player).toBe('light');
           }
         }
       }
     });
 
-    test("dark pieces start in top 3 rows", () => {
+    test('dark pieces start in top 3 rows', () => {
       const game = createTestGame();
 
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < game.size; col++) {
           const piece = game.getPiece(row, col);
           if (piece) {
-            expect(piece.player).toBe("dark");
+            expect(piece.player).toBe('dark');
           }
         }
       }

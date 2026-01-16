@@ -1,7 +1,7 @@
-import { DamaBoard } from "../board.js";
-import { Piece, Player } from "../piece.js";
-import { MoveService } from "../services/moveService.js";
-import { Coord, MoveOption, TurnPolicy } from "../types.js";
+import { DamaBoard } from '../board.js';
+import { Piece, Player } from '../piece.js';
+import { MoveService } from '../services/moveService.js';
+import { Coord, MoveOption, TurnPolicy } from '../types.js';
 
 export class Game {
   private currentPlayer: Player;
@@ -10,7 +10,7 @@ export class Game {
     private readonly board: DamaBoard,
     private readonly moveService: MoveService,
     private readonly turnPolicy: TurnPolicy,
-    startingPlayer: Player = "light"
+    startingPlayer: Player = 'light',
   ) {
     this.currentPlayer = startingPlayer;
   }

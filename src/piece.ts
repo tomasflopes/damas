@@ -1,4 +1,4 @@
-export type Player = "light" | "dark";
+export type Player = 'light' | 'dark';
 
 export class Piece {
   readonly player: Player;

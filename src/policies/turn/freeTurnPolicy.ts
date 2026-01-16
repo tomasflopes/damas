@@ -1,5 +1,5 @@
-import { Player } from "../../piece.js";
-import { TurnPolicy } from "../../types.js";
+import { Player } from '../../piece.js';
+import { TurnPolicy } from '../../types.js';
 
 export class FreeTurnPolicy implements TurnPolicy {
   canMove(): boolean {

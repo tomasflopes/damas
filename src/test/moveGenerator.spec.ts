@@ -1,12 +1,12 @@
-import { DamaBoard } from "../board.js";
-import { DefaultMoveGenerator } from "../generators/moveGenerator.js";
-import { Piece } from "../piece.js";
+import { DamaBoard } from '../board.js';
+import { DefaultMoveGenerator } from '../generators/moveGenerator.js';
+import { Piece } from '../piece.js';
 
-describe("CheckersMoveGenerator", () => {
-  test("generates pawn forward moves for light pieces", () => {
+describe('CheckersMoveGenerator', () => {
+  test('generates pawn forward moves for light pieces', () => {
     const board = new DamaBoard();
     board.clearBoard();
-    board.setPiece(5, 4, new Piece("light"));
+    board.setPiece(5, 4, new Piece('light'));
 
     const generator = new DefaultMoveGenerator(board);
     const moves = generator.getValidMoves({ row: 5, col: 4 });
@@ -16,10 +16,10 @@ describe("CheckersMoveGenerator", () => {
     expect(moves.some((m) => m.to.row === 4 && m.to.col === 5)).toBe(true);
   });
 
-  test("generates pawn forward moves for dark pieces", () => {
+  test('generates pawn forward moves for dark pieces', () => {
     const board = new DamaBoard();
     board.clearBoard();
-    board.setPiece(2, 1, new Piece("dark"));
+    board.setPiece(2, 1, new Piece('dark'));
 
     const generator = new DefaultMoveGenerator(board);
     const moves = generator.getValidMoves({ row: 2, col: 1 });
@@ -28,10 +28,10 @@ describe("CheckersMoveGenerator", () => {
     expect(moves.some((m) => m.to.row === 3 && m.to.col === 0)).toBe(true);
   });
 
-  test("generates king moves in all diagonals", () => {
+  test('generates king moves in all diagonals', () => {
     const board = new DamaBoard();
     board.clearBoard();
-    const king = new Piece("light", true);
+    const king = new Piece('light', true);
     board.setPiece(5, 4, king);
 
     const generator = new DefaultMoveGenerator(board);
@@ -40,11 +40,11 @@ describe("CheckersMoveGenerator", () => {
     expect(moves.length).toBe(11);
   });
 
-  test("detects captures", () => {
+  test('detects captures', () => {
     const board = new DamaBoard();
     board.clearBoard();
-    board.setPiece(5, 2, new Piece("light"));
-    board.setPiece(4, 3, new Piece("dark"));
+    board.setPiece(5, 2, new Piece('light'));
+    board.setPiece(4, 3, new Piece('dark'));
 
     const generator = new DefaultMoveGenerator(board);
     const moves = generator.getValidMoves({ row: 5, col: 2 });
@@ -55,7 +55,7 @@ describe("CheckersMoveGenerator", () => {
     expect(captureMove?.to.col).toBe(4);
   });
 
-  test("returns empty moves for non-existent piece", () => {
+  test('returns empty moves for non-existent piece', () => {
     const board = new DamaBoard();
     board.clearBoard();
 
