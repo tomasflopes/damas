@@ -90,7 +90,6 @@ function handleSquareClick(event: MouseEvent) {
     selected = null;
     validTargets = [];
 
-    setHint("Move made.");
     render();
     return;
   }
@@ -166,7 +165,6 @@ function handleDrop(event: DragEvent) {
     lastMovedTo = targetMove.to;
     selected = null;
     validTargets = [];
-    setHint("Move made.");
     render();
     return;
   }
@@ -209,4 +207,4 @@ function setHint(text: string) {
 }
 
 render();
-setHint("Light begins. Select a piece on dark squares.");
+setHint("Light begins.");

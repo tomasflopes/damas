@@ -35,3 +35,11 @@ A simple implementation of the game Damas (Spanish Checkers) in TypeScript.
    ```bash
    pnpm start
    ```
+
+## WIP
+
+- Implement capture on the edge of the board
+- Implement multi-capture moves
+- Improve king pieces design
+- Add variations
+- Improve UI/UX
