@@ -6,7 +6,7 @@ import { DamaPromotionPolicy } from '../policies/promotion/damaPromotionPolicy.j
 import { AlternatingTurnPolicy } from '../policies/turn/alternatingTurnPolicy.js';
 import { AudioService } from '../services/audio/audioService.js';
 import { DamaAudioService } from '../services/audio/damaAudioService.js';
-import { DamaMoveService } from '../services/damaMoveService.js';
+import { DamaMoveService } from '../services/move/damaMoveService.js';
 import { MoveGenerator, PromotionPolicy, TurnPolicy } from '../types.js';
 import { Game } from './game.js';
 

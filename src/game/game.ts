@@ -1,7 +1,7 @@
 import { Board } from '../board/board.js';
 import { Piece, Player } from '../pieces/piece.js';
 import { AudioService } from '../services/audio/audioService.js';
-import { MoveService } from '../services/moveService.js';
+import { MoveService } from '../services/move/moveService.js';
 import { Coord, MoveOption, TurnPolicy } from '../types.js';
 
 export class Game {

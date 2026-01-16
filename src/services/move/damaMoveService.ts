@@ -1,5 +1,5 @@
-import { Board } from '../board/board.js';
-import { Coord, MoveGenerator, MoveOption, MoveResult, PromotionPolicy } from '../types.js';
+import { Board } from '../../board/board.js';
+import { Coord, MoveGenerator, MoveOption, MoveResult, PromotionPolicy } from '../../types.js';
 import { MoveService } from './moveService.js';
 
 export class DamaMoveService implements MoveService {

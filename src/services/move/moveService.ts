@@ -1,4 +1,4 @@
-import { Coord, MoveOption, MoveResult } from '../types.js';
+import { Coord, MoveOption, MoveResult } from '../../types.js';
 
 export interface MoveService {
   getValidMoves(from: Coord): MoveOption[];
