@@ -24,7 +24,7 @@ function toggleDebugMode() {
   if (!debugButton) return;
   const isDebug = game.isDebugModeEnabled;
   debugButton.setAttribute('aria-pressed', String(isDebug));
-  debugButton.textContent = isDebug ? '🐞 Debug On' : '🐞 Debug Off';
+  debugButton.textContent = isDebug ? 'Debug On' : 'Debug Off';
   render();
 }
 
