@@ -1,5 +1,5 @@
-import { DamaPiece } from '../pieces/damaPiece.js';
 import { Piece } from '../pieces/piece.js';
+import { PieceRenderer } from '../pieces/pieceRenderer.js';
 import { Board } from './board.js';
 
 export const BOARD_SIZE = 8;
@@ -7,7 +7,7 @@ export const BOARD_SIZE = 8;
 export class DamaBoard implements Board {
   private grid: Array<Array<Piece | null>>;
 
-  constructor() {
+  constructor(private readonly pieceRenderer: PieceRenderer) {
     this.grid = this.emptyBoard();
     this.setupPieces();
   }
@@ -42,9 +42,9 @@ export class DamaBoard implements Board {
         if (!this.isDarkSquare(row, col)) continue;
 
         if (row < rowsPerSide) {
-          this.grid[row][col] = new DamaPiece('dark');
+          this.grid[row][col] = this.pieceRenderer.create('dark');
         } else if (row >= BOARD_SIZE - rowsPerSide) {
-          this.grid[row][col] = new DamaPiece('light');
+          this.grid[row][col] = this.pieceRenderer.create('light');
         }
       }
     }

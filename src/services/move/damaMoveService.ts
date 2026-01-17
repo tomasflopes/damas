@@ -1,4 +1,5 @@
 import { Board } from '../../board/board.js';
+import { PieceRenderer } from '../../pieces/pieceRenderer.js';
 import { Coord, MoveGenerator, MoveOption, MoveResult, PromotionPolicy } from '../../types.js';
 import { MoveService } from './moveService.js';
 
@@ -7,6 +8,7 @@ export class DamaMoveService implements MoveService {
     private readonly board: Board,
     private readonly moveGenerator: MoveGenerator,
     private readonly promotionPolicy: PromotionPolicy,
+    private readonly pieceRenderer: PieceRenderer,
   ) {}
 
   getValidMoves(from: Coord): MoveOption[] {
@@ -25,7 +27,11 @@ export class DamaMoveService implements MoveService {
     this.board.setPiece(from.row, from.col, null);
 
     if (allowed.captured) this.board.setPiece(allowed.captured.row, allowed.captured.col, null);
-    if (this.promotionPolicy.shouldPromote(piece, to.row, this.board.size)) piece.promote();
+
+    if (this.promotionPolicy.shouldPromote(piece, to.row, this.board.size)) {
+      const promotedPiece = this.pieceRenderer.create(piece.player, true);
+      this.board.setPiece(to.row, to.col, promotedPiece);
+    }
 
     return { success: true, captured: allowed.captured };
   }

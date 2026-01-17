@@ -1,4 +1,6 @@
-import { DamaPiece } from '../src/pieces/damaPiece.js';
+import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
+import { LightKing } from '../src/pieces/dama/lightKing.js';
+import { LightPawn } from '../src/pieces/dama/lightPawn.js';
 import { DamaPromotionPolicy } from '../src/policies/promotion/damaPromotionPolicy.js';
 import { AlternatingTurnPolicy } from '../src/policies/turn/alternatingTurnPolicy.js';
 import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
@@ -6,25 +8,25 @@ import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
 describe('DefaultPromotionPolicy', () => {
   test('promotes light piece at row 0', () => {
     const policy = new DamaPromotionPolicy();
-    const piece = new DamaPiece('light');
+    const piece = new LightPawn();
     expect(policy.shouldPromote(piece, 0, 8)).toBe(true);
   });
 
   test('promotes dark piece at row 7', () => {
     const policy = new DamaPromotionPolicy();
-    const piece = new DamaPiece('dark');
+    const piece = new DarkPawn();
     expect(policy.shouldPromote(piece, 7, 8)).toBe(true);
   });
 
   test('does not promote king pieces', () => {
     const policy = new DamaPromotionPolicy();
-    const piece = new DamaPiece('light', true);
+    const piece = new LightKing();
     expect(policy.shouldPromote(piece, 0, 8)).toBe(false);
   });
 
   test('does not promote before destination row', () => {
     const policy = new DamaPromotionPolicy();
-    const piece = new DamaPiece('light');
+    const piece = new LightPawn();
     expect(policy.shouldPromote(piece, 5, 8)).toBe(false);
   });
 });
@@ -32,13 +34,13 @@ describe('DefaultPromotionPolicy', () => {
 describe('AlternatingTurnPolicy', () => {
   test('allows light pieces to move when light is current', () => {
     const policy = new AlternatingTurnPolicy();
-    const piece = new DamaPiece('light');
+    const piece = new LightPawn();
     expect(policy.canMove(piece, 'light')).toBe(true);
   });
 
   test('prevents light pieces from moving when dark is current', () => {
     const policy = new AlternatingTurnPolicy();
-    const piece = new DamaPiece('light');
+    const piece = new LightPawn();
     expect(policy.canMove(piece, 'dark')).toBe(false);
   });
 

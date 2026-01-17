@@ -106,10 +106,7 @@ export abstract class GameController {
       token.dataset.row = String(row);
       token.dataset.col = String(col);
 
-      const colorClass = piece.player === 'light' ? 'piece-light' : 'piece-dark';
-      token.classList.add(colorClass);
-
-      if (piece.type === PieceType.KING) token.classList.add('king');
+      piece.render(token);
 
       if (this.lastMovedTo && this.lastMovedTo.row === row && this.lastMovedTo.col === col) {
         token.classList.add('just-moved');

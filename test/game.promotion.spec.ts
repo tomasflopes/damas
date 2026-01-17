@@ -1,5 +1,7 @@
 import { createGame } from '../src/game/gameFactory.js';
-import { DamaPiece } from '../src/pieces/damaPiece.js';
+import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
+import { LightKing } from '../src/pieces/dama/lightKing.js';
+import { LightPawn } from '../src/pieces/dama/lightPawn.js';
 import { PieceType } from '../src/pieces/pieceType.js';
 import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
 
@@ -9,7 +11,7 @@ describe('Game - Promotion', () => {
   test('light piece promotes to king when reaching row 0', () => {
     const game = createTestGame();
     game.clearBoard();
-    game.setPiece(1, 0, new DamaPiece('light'));
+    game.setPiece(1, 0, new LightPawn());
 
     const result = game.movePiece({ row: 1, col: 0 }, { row: 0, col: 1 });
     expect(result).toBe(true);
@@ -22,7 +24,7 @@ describe('Game - Promotion', () => {
   test('dark piece promotes to king when reaching row 7', () => {
     const game = createTestGame();
     game.clearBoard();
-    game.setPiece(6, 1, new DamaPiece('dark'));
+    game.setPiece(6, 1, new DarkPawn());
 
     const result = game.movePiece({ row: 6, col: 1 }, { row: 7, col: 0 });
     expect(result).toBe(true);
@@ -35,7 +37,7 @@ describe('Game - Promotion', () => {
   test('king can move backwards', () => {
     const game = createTestGame();
     game.clearBoard();
-    const king = new DamaPiece('light', true);
+    const king = new LightKing();
     game.setPiece(3, 2, king);
 
     const resultForward = game.movePiece({ row: 3, col: 2 }, { row: 2, col: 3 });

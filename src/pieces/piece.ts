@@ -7,4 +7,5 @@ export interface Piece {
   readonly type: PieceType;
 
   promote(): void;
+  render(token: HTMLElement): void;
 }

@@ -86,13 +86,6 @@ header {
 }
 
 .piece-token {
-  width: 72%;
-  height: 72%;
-  border-radius: 50%;
-  box-shadow:
-    inset 0 4px 8px rgba(0, 0, 0, 0.22),
-    0 2px 6px rgba(0, 0, 0, 0.28);
-  cursor: pointer;
   transition:
     transform 140ms ease,
     box-shadow 140ms ease;
@@ -100,24 +93,6 @@ header {
 
 .piece-token.dragging {
   transform: scale(1.06);
-  box-shadow:
-    inset 0 4px 8px rgba(0, 0, 0, 0.22),
-    0 6px 14px rgba(0, 0, 0, 0.32);
-}
-
-.piece-token.piece-light {
-  background: radial-gradient(circle at 30% 30%, #fff6d5 0 35%, #f2c94c 60%, #d29b2d 100%);
-}
-
-.piece-token.piece-dark {
-  background: radial-gradient(circle at 30% 30%, #d6e2ff 0 35%, #5887ff 60%, #27499c 100%);
-}
-
-.piece-token.king {
-  box-shadow:
-    inset 0 0 0 3px #ffd700,
-    inset 0 4px 8px rgba(0, 0, 0, 0.22),
-    0 2px 6px rgba(0, 0, 0, 0.28);
 }
 
 .piece-token:hover {
