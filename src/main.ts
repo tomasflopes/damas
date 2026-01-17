@@ -11,12 +11,21 @@ const boardEl = document.querySelector<HTMLDivElement>('#board');
 const turnLabel = document.querySelector<HTMLSpanElement>('#turn');
 const hintLabel = document.querySelector<HTMLSpanElement>('#hint');
 const muteButton = document.querySelector<HTMLButtonElement>('#mute');
+const debugButton = document.querySelector<HTMLButtonElement>('#debug');
 
 function updateMuteButton() {
   if (!muteButton) return;
   const muted = game.audio.isMuted();
   muteButton.textContent = muted ? 'Sound Off' : 'Mute';
   muteButton.setAttribute('aria-pressed', String(muted));
+}
+
+function toggleDebugMode() {
+  if (!debugButton) return;
+  const isDebug = game.isDebugModeEnabled;
+  debugButton.setAttribute('aria-pressed', String(isDebug));
+  debugButton.textContent = isDebug ? '🐞 Debug On' : '🐞 Debug Off';
+  render();
 }
 
 if (muteButton) {
@@ -26,6 +35,14 @@ if (muteButton) {
   });
 
   updateMuteButton();
+}
+
+if (debugButton) {
+  debugButton.addEventListener('click', () => {
+    game.toggleDebugMode();
+    toggleDebugMode();
+  });
+  toggleDebugMode();
 }
 
 function render() {
@@ -43,6 +60,10 @@ function render() {
       const isDark = (row + col) % 2 === 1;
       square.classList.toggle('dark', isDark);
       square.classList.toggle('light', !isDark);
+
+      if (game.isDebugModeEnabled) {
+        square.innerHTML = `<span class="coord">${row},${col}</span>`;
+      }
 
       const piece = game.getPiece(row, col);
 

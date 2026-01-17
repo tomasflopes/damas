@@ -1,3 +1,4 @@
+import { Board } from './board/board.js';
 import { Piece, Player } from './pieces/piece.js';
 
 export type MoveOption = { to: Coord; captured?: Coord };
@@ -17,3 +18,8 @@ export interface TurnPolicy {
 }
 
 export type Coord = { row: number; col: number };
+
+export interface MoveHandler {
+  setNext(handler: MoveHandler): MoveHandler;
+  handle(from: Coord, piece: Piece, board: Board): MoveOption[];
+}

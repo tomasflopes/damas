@@ -6,6 +6,7 @@ import { Coord, MoveOption, TurnPolicy } from '../types.js';
 
 export class Game {
   private currentPlayer: Player;
+  private isDebugMode = false;
 
   constructor(
     private readonly board: Board,
@@ -27,6 +28,15 @@ export class Game {
 
   get audio(): AudioService {
     return this.audioService;
+  }
+
+  get isDebugModeEnabled(): boolean {
+    return this.isDebugMode;
+  }
+
+  toggleDebugMode(): boolean {
+    this.isDebugMode = !this.isDebugMode;
+    return this.isDebugMode;
   }
 
   getPiece(row: number, col: number) {
