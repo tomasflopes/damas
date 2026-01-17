@@ -1,5 +1,6 @@
 import { DamaBoard } from '../src/board/damaBoard.js';
-import { DamaMoveGenerator } from '../src/generators/damaMoveGenerator.js';
+import { KingEdgeMoveHandler } from '../src/generators/handlers/kingEdgeMoveHandler.js';
+import { PawnEdgeMoveHandler } from '../src/generators/handlers/pawnEdgeMoveHandler.js';
 import { DamaPiece } from '../src/pieces/damaPiece.js';
 
 describe('Edge Captures', () => {
@@ -10,8 +11,11 @@ describe('Edge Captures', () => {
       board.setPiece(5, 0, new DamaPiece('dark'));
       board.setPiece(6, 1, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 6, col: 1 });
+      const moves = new PawnEdgeMoveHandler().handle(
+        { row: 6, col: 1 },
+        new DamaPiece('light'),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 4 && m.to.col === 1 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -25,8 +29,11 @@ describe('Edge Captures', () => {
       board.setPiece(4, 7, new DamaPiece('dark'));
       board.setPiece(5, 6, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 5, col: 6 });
+      const moves = new PawnEdgeMoveHandler().handle(
+        { row: 5, col: 6 },
+        new DamaPiece('light'),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 3 && m.to.col === 6 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -40,8 +47,11 @@ describe('Edge Captures', () => {
       board.setPiece(2, 1, new DamaPiece('dark'));
       board.setPiece(3, 0, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 2, col: 1 });
+      const moves = new PawnEdgeMoveHandler().handle(
+        { row: 2, col: 1 },
+        new DamaPiece('dark'),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 4 && m.to.col === 1 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -55,8 +65,11 @@ describe('Edge Captures', () => {
       board.setPiece(3, 6, new DamaPiece('dark'));
       board.setPiece(4, 7, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 3, col: 6 });
+      const moves = new PawnEdgeMoveHandler().handle(
+        { row: 3, col: 6 },
+        new DamaPiece('dark'),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 5 && m.to.col === 6 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -72,8 +85,11 @@ describe('Edge Captures', () => {
       board.setPiece(6, 1, new DamaPiece('light', true));
       board.setPiece(5, 0, new DamaPiece('dark'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 6, col: 1 });
+      const moves = new KingEdgeMoveHandler().handle(
+        { row: 6, col: 1 },
+        new DamaPiece('light', true),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 4 && m.to.col === 1 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -87,8 +103,11 @@ describe('Edge Captures', () => {
       board.setPiece(5, 6, new DamaPiece('light', true));
       board.setPiece(4, 7, new DamaPiece('dark'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 5, col: 6 });
+      const moves = new KingEdgeMoveHandler().handle(
+        { row: 5, col: 6 },
+        new DamaPiece('light', true),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 3 && m.to.col === 6 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -102,8 +121,11 @@ describe('Edge Captures', () => {
       board.setPiece(2, 1, new DamaPiece('dark', true));
       board.setPiece(3, 0, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 2, col: 1 });
+      const moves = new KingEdgeMoveHandler().handle(
+        { row: 2, col: 1 },
+        new DamaPiece('dark', true),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 4 && m.to.col === 1 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -117,8 +139,11 @@ describe('Edge Captures', () => {
       board.setPiece(2, 5, new DamaPiece('light', true));
       board.setPiece(4, 7, new DamaPiece('dark'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 2, col: 5 });
+      const moves = new KingEdgeMoveHandler().handle(
+        { row: 2, col: 5 },
+        new DamaPiece('light', true),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 5 && m.to.col === 6 && m.captured);
       expect(edgeCapture).toBeDefined();
@@ -133,8 +158,11 @@ describe('Edge Captures', () => {
       board.setPiece(5, 0, new DamaPiece('dark'));
       board.setPiece(4, 1, new DamaPiece('light'));
 
-      const generator = new DamaMoveGenerator(board);
-      const moves = generator.getValidMoves({ row: 6, col: 1 });
+      const moves = new KingEdgeMoveHandler().handle(
+        { row: 6, col: 1 },
+        new DamaPiece('light', true),
+        board,
+      );
 
       const edgeCapture = moves.find((m) => m.to.row === 4 && m.to.col === 1 && m.captured);
       expect(edgeCapture).toBeUndefined();
