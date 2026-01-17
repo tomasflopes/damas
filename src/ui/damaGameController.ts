@@ -8,11 +8,33 @@ export class DamaGameController extends GameController {
 
   protected configureSquare(square: HTMLButtonElement, row: number, col: number): void {
     const isDark = (row + col) % 2 === 1;
-    square.classList.toggle('dark', isDark);
-    square.classList.toggle('light', !isDark);
+    const squareSize = '64px';
+    const lightColor = '#ffffff';
+    const darkColor = '#000000';
+
+    square.style.border = 'none';
+    square.style.padding = '0';
+    square.style.width = squareSize;
+    square.style.height = squareSize;
+    square.style.display = 'flex';
+    square.style.alignItems = 'center';
+    square.style.position = 'relative';
+    square.style.justifyContent = 'center';
+    square.style.fontSize = '28px';
+    square.style.cursor = 'pointer';
+    square.style.transition = 'transform 120ms ease, box-shadow 120ms ease';
+    square.style.background = isDark ? darkColor : lightColor;
 
     if (this.game.isDebugModeEnabled) {
-      square.innerHTML = `<span class="coord">${row},${col}</span>`;
+      const coord = document.createElement('span');
+      coord.textContent = `${row},${col}`;
+      coord.style.position = 'absolute';
+      coord.style.fontSize = '10px';
+      coord.style.color = '#888';
+      coord.style.pointerEvents = 'none';
+      coord.style.top = '2px';
+      coord.style.right = '2px';
+      square.appendChild(coord);
     }
   }
 
