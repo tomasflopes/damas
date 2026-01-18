@@ -10,7 +10,7 @@ describe('GreedyOpponent', () => {
   describe('Basic Properties', () => {
     test('has correct name', () => {
       const opponent = new GreedyOpponent();
-      expect(opponent.name()).toBe('Greedy (Captures First)');
+      expect(opponent.name()).toBe('Greedy');
     });
 
     test('name is always consistent', () => {
@@ -69,14 +69,11 @@ describe('GreedyOpponent', () => {
     test('prioritizes capture moves when available', () => {
       const game = createTestGame();
 
-      // Manually set up a position where a capture is available
-      // Light piece at (5, 2) can capture dark piece at (4, 3) by moving to (3, 4)
       game.clearBoard();
       game.setPiece(5, 2, new LightPawn());
       game.setPiece(4, 3, new DarkPawn());
-      game.setPiece(3, 4, null); // Empty square for capture
+      game.setPiece(3, 4, null);
 
-      // Light's turn - should be able to capture
       const opponent = new GreedyOpponent();
       const move = opponent.makeMove(game);
 
@@ -87,7 +84,6 @@ describe('GreedyOpponent', () => {
           (vm) => vm.to.row === move.to.row && vm.to.col === move.to.col,
         );
 
-        // If a capture move exists for this piece, it should be selected
         if (selectedMove && selectedMove.captured) {
           expect(selectedMove.captured).toBeDefined();
         }
@@ -98,7 +94,6 @@ describe('GreedyOpponent', () => {
       const game = createTestGame();
       const opponent = new GreedyOpponent();
 
-      // From initial position, no captures are possible
       const move = opponent.makeMove(game);
 
       expect(move).not.toBeNull();
@@ -108,7 +103,6 @@ describe('GreedyOpponent', () => {
           (vm) => vm.to.row === move.to.row && vm.to.col === move.to.col,
         );
 
-        // Initial position has no captures, so this is a regular move
         expect(selectedMove).toBeDefined();
       }
     });
@@ -134,7 +128,6 @@ describe('GreedyOpponent', () => {
       const game = createTestGame();
       const opponent = new GreedyOpponent();
 
-      // Light's turn
       const move1 = opponent.makeMove(game);
       expect(move1).not.toBeNull();
 
@@ -142,7 +135,6 @@ describe('GreedyOpponent', () => {
         game.movePiece(move1.from, move1.to);
         expect(game.player).toBe('dark');
 
-        // Dark should now be able to move
         const move2 = opponent.makeMove(game);
         expect(move2).not.toBeNull();
         if (move2) {
@@ -230,19 +222,16 @@ describe('GreedyOpponent', () => {
       const game = createTestGame();
       game.clearBoard();
 
-      // Set up: light piece at (5,2), dark piece at (4,3) with empty (3,4)
-      // Also put a regular dark piece at (2,2) that light can move to normally
       game.setPiece(5, 2, new LightPawn());
       game.setPiece(4, 3, new DarkPawn());
-      game.setPiece(3, 4, null); // Empty square for capture
-      game.setPiece(2, 2, new DarkPawn()); // Another dark piece (not capturable from 5,2)
+      game.setPiece(3, 4, null);
+      game.setPiece(2, 2, new DarkPawn());
 
       const opponent = new GreedyOpponent();
       const move = opponent.makeMove(game);
 
       expect(move).not.toBeNull();
       if (move) {
-        // Should select the piece that can capture (5,2) or regular moves
         const validMoves = game.getValidMoves(move.from);
         expect(validMoves.length).toBeGreaterThan(0);
       }

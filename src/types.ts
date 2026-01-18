@@ -1,8 +1,8 @@
 import { Board } from './board/board.js';
 import { Piece, Player } from './pieces/piece.js';
 
-export type MoveOption = { to: Coord; captured?: Coord };
-export type MoveResult = { success: boolean; captured?: Coord };
+export type MoveOption = { to: Coord; captured?: Coord | Coord[] };
+export type MoveResult = { success: boolean; captured?: Coord | Coord[] };
 
 export interface MoveGenerator {
   getValidMoves(from: Coord): MoveOption[];

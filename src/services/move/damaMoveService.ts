@@ -26,7 +26,12 @@ export class DamaMoveService implements MoveService {
     this.board.setPiece(to.row, to.col, piece);
     this.board.setPiece(from.row, from.col, null);
 
-    if (allowed.captured) this.board.setPiece(allowed.captured.row, allowed.captured.col, null);
+    if (allowed.captured) {
+      const captures = Array.isArray(allowed.captured) ? allowed.captured : [allowed.captured];
+      for (const capturedCoord of captures) {
+        this.board.setPiece(capturedCoord.row, capturedCoord.col, null);
+      }
+    }
 
     if (this.promotionPolicy.shouldPromote(piece, to.row, this.board.size)) {
       const promotedPiece = this.pieceRenderer.create(piece.player, true);

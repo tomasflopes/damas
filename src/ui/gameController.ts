@@ -1,7 +1,7 @@
 import { Game } from '../game/game.js';
 import { Opponent } from '../opponent/opponent.js';
 import { PieceType } from '../pieces/pieceType.js';
-import { Coord } from '../types.js';
+import { Coord, MoveOption } from '../types.js';
 
 export interface GameUIConfig {
   boardElementId: string;
@@ -16,7 +16,7 @@ export interface GameUIConfig {
 
 export abstract class GameController {
   protected selected: Coord | null = null;
-  protected validTargets: Array<{ to: Coord; captured?: Coord }> = [];
+  protected validTargets: MoveOption[] = [];
   protected lastMovedTo: Coord | null = null;
 
   protected boardEl: HTMLDivElement | null;
@@ -30,6 +30,8 @@ export abstract class GameController {
   protected modalEl: HTMLDivElement | null;
   protected modalMessage: HTMLHeadingElement | null;
   protected resetButton: HTMLButtonElement | null;
+
+  private readonly aiMoveDelay: number = 500;
 
   protected aiOpponents: Map<string, Opponent> = new Map();
 
@@ -339,29 +341,65 @@ export abstract class GameController {
     }
   }
 
-  protected executeMove(from: Coord, move: { to: Coord; captured?: Coord }): void {
+  protected executeMove(from: Coord, move: MoveOption): void {
     const movingPiece = this.game.getPiece(from.row, from.col);
     const wasKing = movingPiece?.type === PieceType.KING;
 
-    this.game.movePiece(from, move.to);
-
     if (move.captured) {
-      this.game.audio.playCapture();
+      const captures = Array.isArray(move.captured) ? move.captured : [move.captured];
+      let delay = 0;
+
+      this.game.movePiece(from, move.to);
+
+      for (let i = 0; i < captures.length; i++) {
+        const captureCoord = captures[i];
+
+        this.game.audio.playCapture();
+        this.renderCapture(captureCoord);
+      }
+
+      setTimeout(() => {
+        const movedPiece = this.game.getPiece(move.to.row, move.to.col);
+        if (!wasKing && movedPiece?.type === PieceType.KING) {
+          this.game.audio.playPromotion();
+        }
+
+        this.lastMovedTo = move.to;
+        this.selected = null;
+        this.validTargets = [];
+
+        this.render();
+        this.processAIMove();
+      }, delay);
     } else {
+      this.game.movePiece(from, move.to);
       this.game.audio.playMove();
+
+      const movedPiece = this.game.getPiece(move.to.row, move.to.col);
+      if (!wasKing && movedPiece?.type === PieceType.KING) {
+        this.game.audio.playPromotion();
+      }
+
+      this.lastMovedTo = move.to;
+      this.selected = null;
+      this.validTargets = [];
+
+      this.render();
+      this.processAIMove();
     }
+  }
 
-    const movedPiece = this.game.getPiece(move.to.row, move.to.col);
-    if (!wasKing && movedPiece?.type === PieceType.KING) {
-      this.game.audio.playPromotion();
+  protected renderCapture(coord: Coord): void {
+    const square = this.boardEl?.querySelector<HTMLDivElement>(
+      `[data-row="${coord.row}"][data-col="${coord.col}"]`,
+    );
+    if (square) {
+      const piece = square.querySelector<HTMLDivElement>('.piece');
+      if (piece) {
+        piece.classList.add('captured');
+        piece.remove();
+      }
     }
-
-    this.lastMovedTo = move.to;
-    this.selected = null;
-    this.validTargets = [];
-
-    this.render();
-    this.processAIMove();
   }
 
   protected processAIMove(): void {
@@ -378,7 +416,7 @@ export abstract class GameController {
       if (move) {
         this.executeMove(move.from, { to: move.to });
       }
-    }, 500);
+    }, this.aiMoveDelay);
   }
 
   protected applyHighlights(): void {

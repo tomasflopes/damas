@@ -50,7 +50,7 @@ describe('OpponentFactory', () => {
       const greedyOpponent = opponents.find((opt) => opt.id === 'greedy');
 
       expect(greedyOpponent).toBeDefined();
-      expect(greedyOpponent?.name).toBe('Greedy (Captures First)');
+      expect(greedyOpponent?.name).toBe('Greedy');
     });
 
     test('returns new opponent instances on each call', () => {
