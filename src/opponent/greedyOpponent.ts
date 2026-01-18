@@ -2,13 +2,14 @@ import { Game } from '../game/game.js';
 import { Coord } from '../types.js';
 import { Opponent } from './opponent.js';
 
-export class RandomMovesOpponent implements Opponent {
+export class GreedyOpponent implements Opponent {
   name(): string {
-    return 'Random Moves';
+    return 'Greedy';
   }
 
   makeMove(game: Game): { from: Coord; to: Coord } | null {
     const availableMoves: Array<{ from: Coord; to: Coord }> = [];
+    const captureMoves: Array<{ from: Coord; to: Coord }> = [];
 
     for (let row = 0; row < game.size; row++) {
       for (let col = 0; col < game.size; col++) {
@@ -18,16 +19,20 @@ export class RandomMovesOpponent implements Opponent {
         if (!piece || piece.player !== game.player) continue;
 
         const moves = game.getValidMoves(from);
-
         for (const move of moves) {
-          availableMoves.push({ from, to: move.to });
+          const moveData = { from, to: move.to };
+          availableMoves.push(moveData);
+
+          if (move.captured) captureMoves.push(moveData);
         }
       }
     }
 
-    if (availableMoves.length === 0) return null;
+    const movesToChooseFrom = captureMoves.length > 0 ? captureMoves : availableMoves;
 
-    const randomIndex = Math.floor(Math.random() * availableMoves.length);
-    return availableMoves[randomIndex];
+    if (movesToChooseFrom.length === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * movesToChooseFrom.length);
+    return movesToChooseFrom[randomIndex];
   }
 }

@@ -1,3 +1,4 @@
+import { GreedyOpponent } from '@/opponent/greedyOpponent.js';
 import { OpponentFactory } from '@/opponent/opponentFactory.js';
 import { RandomMovesOpponent } from '@/opponent/randomMovesOpponent.js';
 
@@ -44,6 +45,14 @@ describe('OpponentFactory', () => {
       expect(randomMovesOpponent?.name).toBe('Random Moves');
     });
 
+    test('includes GreedyOpponent', () => {
+      const opponents = OpponentFactory.getAvailableOpponents();
+      const greedyOpponent = opponents.find((opt) => opt.id === 'greedy');
+
+      expect(greedyOpponent).toBeDefined();
+      expect(greedyOpponent?.name).toBe('Greedy (Captures First)');
+    });
+
     test('returns new opponent instances on each call', () => {
       const opponents1 = OpponentFactory.getAvailableOpponents();
       const opponents2 = OpponentFactory.getAvailableOpponents();
@@ -62,6 +71,13 @@ describe('OpponentFactory', () => {
 
       expect(opponent).toBeDefined();
       expect(opponent instanceof RandomMovesOpponent).toBe(true);
+    });
+
+    test('returns greedy opponent for valid id', () => {
+      const opponent = OpponentFactory.getOpponentById('greedy');
+
+      expect(opponent).toBeDefined();
+      expect(opponent instanceof GreedyOpponent).toBe(true);
     });
 
     test('returns undefined for invalid id', () => {
