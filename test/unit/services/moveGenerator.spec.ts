@@ -1,9 +1,9 @@
-import { DamaBoard } from '../src/board/damaBoard.js';
-import { DamaMoveGenerator } from '../src/generators/damaMoveGenerator.js';
-import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
-import { LightKing } from '../src/pieces/dama/lightKing.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { MockPieceRenderer } from '../src/utils/mockPieceRenderer.js';
+import { DamaBoard } from '@/board/damaBoard.js';
+import { DamaMoveGenerator } from '@/generators/damaMoveGenerator.js';
+import { DarkPawn } from '@/pieces/dama/darkPawn.js';
+import { LightKing } from '@/pieces/dama/lightKing.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { MockPieceRenderer } from '@/utils/mockPieceRenderer.js';
 
 const mockPieceRenderer = new MockPieceRenderer();
 

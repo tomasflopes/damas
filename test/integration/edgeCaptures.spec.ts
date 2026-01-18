@@ -1,11 +1,11 @@
-import { DamaBoard } from '../src/board/damaBoard.js';
-import { KingEdgeMoveHandler } from '../src/generators/handlers/kingEdgeMoveHandler.js';
-import { PawnEdgeMoveHandler } from '../src/generators/handlers/pawnEdgeMoveHandler.js';
-import { DarkKing } from '../src/pieces/dama/darkKing.js';
-import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
-import { LightKing } from '../src/pieces/dama/lightKing.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { MockPieceRenderer } from '../src/utils/mockPieceRenderer.js';
+import { DamaBoard } from '@/board/damaBoard.js';
+import { KingEdgeMoveHandler } from '@/generators/handlers/kingEdgeMoveHandler.js';
+import { PawnEdgeMoveHandler } from '@/generators/handlers/pawnEdgeMoveHandler.js';
+import { DarkKing } from '@/pieces/dama/darkKing.js';
+import { DarkPawn } from '@/pieces/dama/darkPawn.js';
+import { LightKing } from '@/pieces/dama/lightKing.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { MockPieceRenderer } from '@/utils/mockPieceRenderer.js';
 
 const mockPieceRenderer = new MockPieceRenderer();
 

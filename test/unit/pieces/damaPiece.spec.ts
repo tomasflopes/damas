@@ -1,7 +1,7 @@
-import { DarkKing } from '../src/pieces/dama/darkKing';
-import { DarkPawn } from '../src/pieces/dama/darkPawn';
-import { LightPawn } from '../src/pieces/dama/lightPawn';
-import { PieceType } from '../src/pieces/pieceType';
+import { DarkKing } from '@/pieces/dama/darkKing';
+import { DarkPawn } from '@/pieces/dama/darkPawn';
+import { LightPawn } from '@/pieces/dama/lightPawn';
+import { PieceType } from '@/pieces/pieceType';
 
 describe('Piece', () => {
   test('creates a piece with player type', () => {

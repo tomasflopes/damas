@@ -1,9 +1,9 @@
-import { createGame } from '../src/game/gameFactory.js';
-import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
-import { LightKing } from '../src/pieces/dama/lightKing.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { PieceType } from '../src/pieces/pieceType.js';
-import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
+import { createGame } from '@/game/gameFactory.js';
+import { DarkPawn } from '@/pieces/dama/darkPawn.js';
+import { LightKing } from '@/pieces/dama/lightKing.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { PieceType } from '@/pieces/pieceType.js';
+import { FreeTurnPolicy } from '@/policies/turn/freeTurnPolicy.js';
 
 const createTestGame = () => createGame({ turnPolicy: new FreeTurnPolicy() });
 

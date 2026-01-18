@@ -1,6 +1,6 @@
-import { DamaBoard } from '../src/board/damaBoard.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { MockPieceRenderer } from '../src/utils/mockPieceRenderer.js';
+import { DamaBoard } from '@/board/damaBoard.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { MockPieceRenderer } from '@/utils/mockPieceRenderer.js';
 
 const mockPieceRenderer = new MockPieceRenderer();
 

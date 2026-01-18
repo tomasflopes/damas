@@ -1,9 +1,9 @@
-import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
-import { LightKing } from '../src/pieces/dama/lightKing.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { DamaPromotionPolicy } from '../src/policies/promotion/damaPromotionPolicy.js';
-import { AlternatingTurnPolicy } from '../src/policies/turn/alternatingTurnPolicy.js';
-import { FreeTurnPolicy } from '../src/policies/turn/freeTurnPolicy.js';
+import { DarkPawn } from '@/pieces/dama/darkPawn.js';
+import { LightKing } from '@/pieces/dama/lightKing.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { DamaPromotionPolicy } from '@/policies/promotion/damaPromotionPolicy.js';
+import { AlternatingTurnPolicy } from '@/policies/turn/alternatingTurnPolicy.js';
+import { FreeTurnPolicy } from '@/policies/turn/freeTurnPolicy.js';
 
 describe('DefaultPromotionPolicy', () => {
   test('promotes light piece at row 0', () => {

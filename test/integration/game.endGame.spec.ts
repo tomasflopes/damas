@@ -1,7 +1,7 @@
-import { createGame } from '../src/game/gameFactory.js';
-import { DarkPawn } from '../src/pieces/dama/darkPawn.js';
-import { LightPawn } from '../src/pieces/dama/lightPawn.js';
-import { AlternatingTurnPolicy } from '../src/policies/turn/alternatingTurnPolicy.js';
+import { createGame } from '@/game/gameFactory.js';
+import { DarkPawn } from '@/pieces/dama/darkPawn.js';
+import { LightPawn } from '@/pieces/dama/lightPawn.js';
+import { AlternatingTurnPolicy } from '@/policies/turn/alternatingTurnPolicy.js';
 
 const createTestGame = () => createGame({ turnPolicy: new AlternatingTurnPolicy() });
 
