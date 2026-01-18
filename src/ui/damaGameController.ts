@@ -1,9 +1,34 @@
 import { Game } from '../game/game.js';
+import { OpponentFactory } from '../opponent/opponentFactory.js';
 import { GameController, GameUIConfig } from './gameController.js';
 
 export class DamaGameController extends GameController {
   constructor(game: Game, config: GameUIConfig) {
     super(game, config);
+    this.initializeOpponents();
+  }
+
+  private initializeOpponents(): void {
+    const availableOpponents = OpponentFactory.getAvailableOpponents();
+
+    for (const opponentOption of availableOpponents) {
+      this.registerOpponent(opponentOption.id, opponentOption.opponent);
+    }
+
+    this.populateOpponentSelect(availableOpponents);
+  }
+
+  private populateOpponentSelect(availableOpponents: Array<{ id: string; name: string }>): void {
+    if (!this.aiOpponentSelect) return;
+
+    this.aiOpponentSelect.innerHTML = '';
+
+    for (const opponentOption of availableOpponents) {
+      const option = document.createElement('option');
+      option.value = opponentOption.id;
+      option.textContent = opponentOption.name;
+      this.aiOpponentSelect.appendChild(option);
+    }
   }
 
   protected configureSquare(square: HTMLButtonElement, row: number, col: number): void {
@@ -41,5 +66,6 @@ export class DamaGameController extends GameController {
   start(): void {
     this.render();
     this.setHint('Light begins.');
+    this.processAIMove();
   }
 }

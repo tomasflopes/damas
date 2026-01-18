@@ -1,4 +1,5 @@
 import { Board } from '../board/board.js';
+import { Opponent } from '../opponent/opponent.js';
 import { Piece, Player } from '../pieces/piece.js';
 import { AudioService } from '../services/audio/audioService.js';
 import { MoveService } from '../services/move/moveService.js';
@@ -9,6 +10,7 @@ export class Game {
   private isDebugMode = false;
   private gameEnded = false;
   private winner: Player | null = null;
+  private aiOpponents: Map<Player, Opponent | null> = new Map();
 
   constructor(
     private readonly board: Board,
@@ -47,6 +49,22 @@ export class Game {
   toggleDebugMode(): boolean {
     this.isDebugMode = !this.isDebugMode;
     return this.isDebugMode;
+  }
+
+  setAIOpponent(player: Player, opponent: Opponent | null): void {
+    if (opponent === null) {
+      this.aiOpponents.delete(player);
+    } else {
+      this.aiOpponents.set(player, opponent);
+    }
+  }
+
+  getAIOpponent(player: Player): Opponent | null | undefined {
+    return this.aiOpponents.get(player);
+  }
+
+  isCurrentPlayerAI(): boolean {
+    return this.aiOpponents.has(this.currentPlayer);
   }
 
   getPiece(row: number, col: number) {

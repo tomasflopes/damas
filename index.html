@@ -16,6 +16,16 @@
           <button id="mute" type="button" aria-pressed="false">Sound on</button>
           <button id="debug" type="button" aria-pressed="false">Debug off</button>
         </div>
+        <div class="game-mode-controls">
+          <label for="game-mode">Game Mode:</label>
+          <select id="game-mode">
+            <option value="2player">2 Players</option>
+            <option value="ai">vs AI</option>
+          </select>
+          <label for="ai-opponent">AI Difficulty:</label>
+          <select id="ai-opponent"></select>
+          <button id="apply-mode" type="button">Apply</button>
+        </div>
         <span id="hint">Loading…</span>
       </header>
       <div id="board" aria-label="Damas board"></div>

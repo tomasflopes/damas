@@ -1,4 +1,5 @@
 import { Game } from '../game/game.js';
+import { Opponent } from '../opponent/opponent.js';
 import { PieceType } from '../pieces/pieceType.js';
 import { Coord } from '../types.js';
 
@@ -8,6 +9,9 @@ export interface GameUIConfig {
   hintLabelId: string;
   muteButtonId: string;
   debugButtonId: string;
+  gameModeSelectId?: string;
+  aiOpponentSelectId?: string;
+  applyModeButtonId?: string;
 }
 
 export abstract class GameController {
@@ -20,9 +24,14 @@ export abstract class GameController {
   protected hintLabel: HTMLSpanElement | null;
   protected muteButton: HTMLButtonElement | null;
   protected debugButton: HTMLButtonElement | null;
+  protected gameModeSelect: HTMLSelectElement | null;
+  protected aiOpponentSelect: HTMLSelectElement | null;
+  protected applyModeButton: HTMLButtonElement | null;
   protected modalEl: HTMLDivElement | null;
   protected modalMessage: HTMLHeadingElement | null;
   protected resetButton: HTMLButtonElement | null;
+
+  protected aiOpponents: Map<string, Opponent> = new Map();
 
   constructor(
     protected game: Game,
@@ -33,6 +42,15 @@ export abstract class GameController {
     this.hintLabel = document.querySelector<HTMLSpanElement>(`#${config.hintLabelId}`);
     this.muteButton = document.querySelector<HTMLButtonElement>(`#${config.muteButtonId}`);
     this.debugButton = document.querySelector<HTMLButtonElement>(`#${config.debugButtonId}`);
+    this.gameModeSelect = config.gameModeSelectId
+      ? document.querySelector<HTMLSelectElement>(`#${config.gameModeSelectId}`)
+      : null;
+    this.aiOpponentSelect = config.aiOpponentSelectId
+      ? document.querySelector<HTMLSelectElement>(`#${config.aiOpponentSelectId}`)
+      : null;
+    this.applyModeButton = config.applyModeButtonId
+      ? document.querySelector<HTMLButtonElement>(`#${config.applyModeButtonId}`)
+      : null;
     this.modalEl = document.querySelector<HTMLDivElement>('#game-end-modal');
     this.modalMessage = document.querySelector<HTMLHeadingElement>('#modal-message');
     this.resetButton = document.querySelector<HTMLButtonElement>('#reset-button');
@@ -57,11 +75,52 @@ export abstract class GameController {
       this.toggleDebugMode();
     }
 
+    if (this.gameModeSelect) {
+      this.gameModeSelect.addEventListener('change', () => {
+        this.toggleGameModeVisibility();
+      });
+      this.toggleGameModeVisibility();
+    }
+
+    if (this.applyModeButton) {
+      this.applyModeButton.addEventListener('click', () => {
+        this.applyGameMode();
+      });
+    }
+
     if (this.resetButton) {
       this.resetButton.addEventListener('click', () => {
         this.resetGame();
       });
     }
+  }
+
+  protected toggleGameModeVisibility(): void {
+    const isAIMode = this.gameModeSelect?.value === 'ai';
+    if (this.aiOpponentSelect) {
+      this.aiOpponentSelect.disabled = !isAIMode;
+    }
+  }
+
+  protected registerOpponent(id: string, opponent: Opponent): void {
+    this.aiOpponents.set(id, opponent);
+  }
+
+  protected applyGameMode(): void {
+    const mode = this.gameModeSelect?.value;
+
+    this.game.setAIOpponent('dark', null);
+    this.game.setAIOpponent('light', null);
+
+    if (mode === 'ai') {
+      const selectedAI = this.aiOpponentSelect?.value || 'random';
+      const aiOpponent = this.aiOpponents.get(selectedAI);
+      if (aiOpponent) {
+        this.game.setAIOpponent('dark', aiOpponent);
+      }
+    }
+
+    this.resetGame();
   }
 
   protected updateMuteButton(): void {
@@ -181,6 +240,11 @@ export abstract class GameController {
       return;
     }
 
+    if (this.game.isCurrentPlayerAI()) {
+      this.setHint('AI is thinking...');
+      return;
+    }
+
     const target = event.currentTarget as HTMLButtonElement;
     const row = Number(target.dataset.row);
     const col = Number(target.dataset.col);
@@ -297,6 +361,24 @@ export abstract class GameController {
     this.validTargets = [];
 
     this.render();
+    this.processAIMove();
+  }
+
+  protected processAIMove(): void {
+    if (this.game.hasEnded) return;
+    if (!this.game.isCurrentPlayerAI()) return;
+
+    setTimeout(() => {
+      if (this.game.hasEnded) return;
+
+      const aiOpponent = this.game.getAIOpponent(this.game.player);
+      if (!aiOpponent) return;
+
+      const move = aiOpponent.makeMove(this.game);
+      if (move) {
+        this.executeMove(move.from, { to: move.to });
+      }
+    }, 500);
   }
 
   protected applyHighlights(): void {

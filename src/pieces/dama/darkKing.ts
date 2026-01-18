@@ -19,7 +19,6 @@ export class DarkKing implements Piece {
     token.style.transition = 'transform 140ms ease, box-shadow 140ms ease';
     token.style.background =
       'radial-gradient(circle at 30% 30%, #d6e2ff 0 35%, #5887ff 60%, #27499c 100%)';
-    // Double border crown effect: outer gold ring + inner darker ring
     token.style.boxShadow =
       'inset 0 0 0 2px #ffd700, inset 0 0 0 4px #1a2a5f, inset 0 4px 8px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.28)';
   }
