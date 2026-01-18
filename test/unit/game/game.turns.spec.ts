@@ -68,15 +68,12 @@ describe('Game - Turn Management', () => {
     test('cannot move opponent piece', () => {
       const game = createTestGame();
 
-      // Light's turn - can move light piece
       const lightMove = game.movePiece({ row: 5, col: 0 }, { row: 4, col: 1 });
       expect(lightMove).toBe(true);
 
-      // Dark's turn - cannot move light piece
       const darkMoveLight = game.movePiece({ row: 4, col: 1 }, { row: 3, col: 2 });
       expect(darkMoveLight).toBe(false);
 
-      // Dark's turn - can move dark piece
       const darkMove = game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
       expect(darkMove).toBe(true);
     });
@@ -91,7 +88,6 @@ describe('Game - Turn Management', () => {
       game.setPiece(2, 1, new DarkPawn(1));
       game.setPiece(5, 0, new LightPawn(1));
 
-      // Light's turn - can only see light piece moves
       const darkMoves = game.getValidMoves({ row: 2, col: 1 });
       expect(darkMoves.length).toBe(0);
 
@@ -113,10 +109,8 @@ describe('Game - Turn Management', () => {
       game.setPiece(2, 1, new DarkPawn(1));
       game.setPiece(5, 0, new LightPawn(1));
 
-      // Light's turn
       expect(game.player).toBe('light');
 
-      // Cannot get moves for dark piece
       const darkMoves = game.getValidMoves({ row: 2, col: 1 });
       expect(darkMoves.length).toBe(0);
     });
@@ -138,7 +132,6 @@ describe('Game - Turn Management', () => {
       game.clearBoard();
       game.setPiece(2, 1, new DarkPawn(1));
 
-      // Light's turn - cannot move dark piece
       const result = game.movePiece({ row: 2, col: 1 }, { row: 3, col: 0 });
       expect(result).toBe(false);
     });
@@ -149,7 +142,7 @@ describe('Game - Turn Management', () => {
       game.setPiece(5, 0, new LightPawn(1));
 
       const playerBefore = game.player;
-      game.movePiece({ row: 5, col: 0 }, { row: 5, col: 1 }); // Invalid move
+      game.movePiece({ row: 5, col: 0 }, { row: 5, col: 1 });
       const playerAfter = game.player;
 
       expect(playerBefore).toBe(playerAfter);

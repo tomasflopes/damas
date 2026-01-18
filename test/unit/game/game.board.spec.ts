@@ -115,7 +115,6 @@ describe('Game - Board Operations', () => {
 
       game.reset();
 
-      // Check that pieces are restored
       expect(game.getPiece(2, 1)?.player).toBe('dark');
       expect(game.getPiece(5, 0)?.player).toBe('light');
     });

@@ -22,11 +22,8 @@ describe('Game - End Game Detection', () => {
       const game = createTestGame();
       game.clearBoard();
 
-      // Only place dark piece, light has no pieces
       game.setPiece(2, 1, new DarkPawn(1));
 
-      // Light's turn with no pieces should end game
-      // (depends on how checkGameEnd is called)
       expect(game.player).toBe('light');
     });
 
@@ -35,10 +32,8 @@ describe('Game - End Game Detection', () => {
       game.clearBoard();
       game.setPiece(2, 1, new DarkPawn(1));
 
-      // Manually verify game would end based on board state
       const initialState = game.hasEnded;
 
-      // Try invalid move
       game.movePiece({ row: 0, col: 0 }, { row: 1, col: 1 });
 
       expect(game.hasEnded).toBe(initialState);
@@ -63,18 +58,14 @@ describe('Game - End Game Detection', () => {
       const game = createTestGame();
       game.clearBoard();
 
-      // Only place dark piece, light has no pieces
       game.setPiece(2, 1, new DarkPawn(1));
 
-      // Light cannot move, verify board state
       expect(game.player).toBe('light');
 
-      // Check if light has any pieces
       const hasLightPieces = Array.from({ length: 8 }).some((_, row) =>
         Array.from({ length: 8 }).some((_, col) => game.getPiece(row, col)?.player === 'light'),
       );
 
-      // Light has no pieces - can verify board setup
       expect(hasLightPieces).toBe(false);
     });
 
@@ -114,7 +105,6 @@ describe('Game - End Game Detection', () => {
       const firstWinner = game.gameWinner;
       const firstEnded = game.hasEnded;
 
-      // Try to move (should fail or not change state)
       game.movePiece({ row: 0, col: 0 }, { row: 1, col: 1 });
 
       expect(game.gameWinner).toBe(firstWinner);
@@ -150,7 +140,6 @@ describe('Game - End Game Detection', () => {
 
       game.reset();
 
-      // Verify pieces are restored
       expect(game.getPiece(5, 0)).toBeDefined();
       expect(game.getPiece(2, 1)).toBeDefined();
       expect(game.hasEnded).toBe(false);
@@ -164,10 +153,8 @@ describe('Game - End Game Detection', () => {
       game.clearBoard();
       game.setPiece(2, 1, new DarkPawn(1));
 
-      // Light is current player with no pieces
       expect(game.player).toBe('light');
 
-      // Check if any light pieces exist
       const hasLightPieces = Array.from({ length: 8 }).some((_, row) =>
         Array.from({ length: 8 }).some((_, col) => game.getPiece(row, col)?.player === 'light'),
       );
@@ -178,7 +165,6 @@ describe('Game - End Game Detection', () => {
     test('game continues when current player has valid moves', () => {
       const game = createTestGame();
 
-      // Light should have valid moves at start
       const lightHasMove = Array.from({ length: 8 }).some((_, row) =>
         Array.from({ length: 8 }).some((_, col) => {
           const piece = game.getPiece(row, col);
