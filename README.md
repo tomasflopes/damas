@@ -1,6 +1,6 @@
 # Damas
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue) ![Jest](https://img.shields.io/badge/Jest-29.7-green) ![HTML5](https://img.shields.io/badge/HTML5-compatible-e34c26) ![License](https://img.shields.io/badge/license-MIT-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue) ![Jest](https://img.shields.io/badge/Jest-29.7-green) ![HTML5](https://img.shields.io/badge/HTML5-e34c26) ![CSS](https://img.shields.io/badge/CSS-1572B6) ![License](https://img.shields.io/badge/license-MIT-green)
 
 A simple implementation of the game Damas (Spanish Checkers) in TypeScript.
 
