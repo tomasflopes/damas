@@ -7,4 +7,5 @@ export interface Board {
   clearBoard(): void;
   inBounds(row: number, col: number): boolean;
   isDarkSquare(row: number, col: number): boolean;
+  setupPieces(): void;
 }

@@ -119,3 +119,72 @@ header {
   color: #333;
   font-size: 14px;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 200ms ease;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  animation: slideIn 300ms ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+#modal-message {
+  margin: 0 0 20px 0;
+  font-size: 32px;
+  color: #111;
+  font-weight: 600;
+}
+
+#reset-button {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: #1ea672;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    transform 100ms ease;
+}
+
+#reset-button:hover {
+  background: #16885b;
+  transform: scale(1.05);
+}
+
+#reset-button:active {
+  transform: scale(0.95);
+}

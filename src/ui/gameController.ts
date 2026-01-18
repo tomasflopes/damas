@@ -20,6 +20,9 @@ export abstract class GameController {
   protected hintLabel: HTMLSpanElement | null;
   protected muteButton: HTMLButtonElement | null;
   protected debugButton: HTMLButtonElement | null;
+  protected modalEl: HTMLDivElement | null;
+  protected modalMessage: HTMLHeadingElement | null;
+  protected resetButton: HTMLButtonElement | null;
 
   constructor(
     protected game: Game,
@@ -30,6 +33,9 @@ export abstract class GameController {
     this.hintLabel = document.querySelector<HTMLSpanElement>(`#${config.hintLabelId}`);
     this.muteButton = document.querySelector<HTMLButtonElement>(`#${config.muteButtonId}`);
     this.debugButton = document.querySelector<HTMLButtonElement>(`#${config.debugButtonId}`);
+    this.modalEl = document.querySelector<HTMLDivElement>('#game-end-modal');
+    this.modalMessage = document.querySelector<HTMLHeadingElement>('#modal-message');
+    this.resetButton = document.querySelector<HTMLButtonElement>('#reset-button');
 
     this.setupEventListeners();
   }
@@ -49,6 +55,12 @@ export abstract class GameController {
         this.toggleDebugMode();
       });
       this.toggleDebugMode();
+    }
+
+    if (this.resetButton) {
+      this.resetButton.addEventListener('click', () => {
+        this.resetGame();
+      });
     }
   }
 
@@ -130,11 +142,45 @@ export abstract class GameController {
 
   protected updateTurnLabel(): void {
     if (this.turnLabel) {
-      this.turnLabel.textContent = this.game.player === 'light' ? 'Light' : 'Dark';
+      if (this.game.hasEnded) {
+        const winner = this.game.gameWinner === 'light' ? 'Light' : 'Dark';
+        this.turnLabel.textContent = `${winner} Wins!`;
+        this.showGameEndModal(winner);
+      } else {
+        this.turnLabel.textContent = this.game.player === 'light' ? 'Light' : 'Dark';
+      }
     }
   }
 
+  protected showGameEndModal(winner: string): void {
+    if (this.modalEl && this.modalMessage) {
+      this.modalMessage.textContent = `🎉 ${winner} Wins! 🎉`;
+      this.modalEl.classList.remove('hidden');
+    }
+  }
+
+  protected hideGameEndModal(): void {
+    if (this.modalEl) {
+      this.modalEl.classList.add('hidden');
+    }
+  }
+
+  protected resetGame(): void {
+    this.hideGameEndModal();
+    this.selected = null;
+    this.validTargets = [];
+    this.lastMovedTo = null;
+    this.game.reset();
+    this.render();
+    this.setHint('Light begins.');
+  }
+
   protected handleSquareClick(event: MouseEvent): void {
+    if (this.game.hasEnded) {
+      this.setHint('Game over. Refresh to play again.');
+      return;
+    }
+
     const target = event.currentTarget as HTMLButtonElement;
     const row = Number(target.dataset.row);
     const col = Number(target.dataset.col);
@@ -164,6 +210,11 @@ export abstract class GameController {
   }
 
   protected handleDragStart(event: DragEvent): void {
+    if (this.game.hasEnded) {
+      event.preventDefault();
+      return;
+    }
+
     const target = event.currentTarget as HTMLElement;
     const row = Number(target.dataset.row);
     const col = Number(target.dataset.col);

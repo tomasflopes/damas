@@ -34,7 +34,7 @@ export class DamaBoard implements Board {
     return Array.from({ length: BOARD_SIZE }, () => Array.from({ length: BOARD_SIZE }, () => null));
   }
 
-  private setupPieces() {
+  setupPieces() {
     const rowsPerSide = 3;
 
     for (let row = 0; row < BOARD_SIZE; row++) {

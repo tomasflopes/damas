@@ -7,6 +7,8 @@ import { Coord, MoveOption, TurnPolicy } from '../types.js';
 export class Game {
   private currentPlayer: Player;
   private isDebugMode = false;
+  private gameEnded = false;
+  private winner: Player | null = null;
 
   constructor(
     private readonly board: Board,
@@ -34,6 +36,14 @@ export class Game {
     return this.isDebugMode;
   }
 
+  get hasEnded(): boolean {
+    return this.gameEnded;
+  }
+
+  get gameWinner(): Player | null {
+    return this.winner;
+  }
+
   toggleDebugMode(): boolean {
     this.isDebugMode = !this.isDebugMode;
     return this.isDebugMode;
@@ -49,6 +59,11 @@ export class Game {
 
   clearBoard() {
     this.board.clearBoard();
+  }
+
+  resetBoard() {
+    this.board.clearBoard();
+    this.board.setupPieces();
   }
 
   getValidMoves(from: Coord): MoveOption[] {
@@ -67,6 +82,42 @@ export class Game {
     if (!result.success) return false;
 
     this.currentPlayer = this.turnPolicy.next(this.currentPlayer);
+    this.checkGameEnd();
     return true;
+  }
+
+  private checkGameEnd(): void {
+    if (this.gameEnded) return;
+    if (this.currentPlayerHasValidMoves()) return;
+
+    this.endGameWithCurrentPlayerAsLoser();
+  }
+
+  private currentPlayerHasValidMoves(): boolean {
+    for (let row = 0; row < this.board.size; row++) {
+      for (let col = 0; col < this.board.size; col++) {
+        const piece = this.board.getPiece(row, col);
+
+        if (piece && piece.player === this.currentPlayer) {
+          const moves = this.getValidMoves({ row, col });
+          if (moves.length > 0) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private endGameWithCurrentPlayerAsLoser(): void {
+    this.gameEnded = true;
+    this.winner = this.currentPlayer === 'light' ? 'dark' : 'light';
+  }
+
+  reset(): void {
+    this.resetBoard();
+
+    this.currentPlayer = 'light';
+    this.gameEnded = false;
+    this.winner = null;
   }
 }
