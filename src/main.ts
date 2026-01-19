@@ -12,6 +12,8 @@ const controller = new DamaGameController(game, {
   gameModeSelectId: 'game-mode',
   aiOpponentSelectId: 'ai-opponent',
   applyModeButtonId: 'apply-mode',
+  scoreLightBarId: 'score-light-bar',
+  scoreDarkBarId: 'score-dark-bar',
 });
 
 controller.start();

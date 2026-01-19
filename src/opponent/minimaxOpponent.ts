@@ -1,15 +1,16 @@
+import { Player } from '@/pieces/piece.js';
 import { Game } from '../game/game.js';
 import { createGame } from '../game/gameFactory.js';
+import { DamaScoreService } from '../services/score/damaScoreService.js';
+import type { ScoreService } from '../services/score/scoreService.js';
 import { Coord, MoveOption } from '../types.js';
 import { Opponent } from './opponent.js';
 
 export class MinimaxOpponent implements Opponent {
-  private readonly kingValue: number = 3;
-  private readonly pawnValue: number = 1;
-
-  constructor(private readonly maxDepth: number = 5) {
-    this.maxDepth = maxDepth;
-  }
+  constructor(
+    private readonly maxDepth: number = 5,
+    private scoreService: ScoreService = new DamaScoreService(),
+  ) {}
 
   name(): string {
     return 'Minimax';
@@ -139,56 +140,7 @@ export class MinimaxOpponent implements Opponent {
   }
 
   private evaluate(game: Game, maximizingPlayer: string): number {
-    if (game.hasEnded) return this.evaluateTerminalState(game, maximizingPlayer);
-
-    return this.evaluatePosition(game, maximizingPlayer);
-  }
-
-  private evaluateTerminalState(game: Game, maximizingPlayer: string): number {
-    const opponent = maximizingPlayer === 'light' ? 'dark' : 'light';
-
-    for (let row = 0; row < game.size; row++) {
-      for (let col = 0; col < game.size; col++) {
-        if (game.getPiece(row, col)?.player === opponent) return -Infinity;
-      }
-    }
-
-    return Infinity;
-  }
-
-  private evaluatePosition(game: Game, maximizingPlayer: string): number {
-    let score = 0;
-
-    for (let row = 0; row < game.size; row++) {
-      for (let col = 0; col < game.size; col++) {
-        const piece = game.getPiece(row, col);
-        if (!piece) continue;
-
-        const isOwnPiece = piece.player === maximizingPlayer;
-        score += this.evaluatePiece(piece, row, isOwnPiece);
-      }
-    }
-
-    return score;
-  }
-
-  private evaluatePiece(piece: any, row: number, isOwnPiece: boolean): number {
-    const pieceValue = piece.type === 'king' ? this.kingValue : this.pawnValue;
-    const sign = isOwnPiece ? 1 : -1;
-    let score = sign * pieceValue;
-
-    if (piece.type === 'pawn') {
-      const promotionBonus = this.getPromotionBonus(piece.player, row, isOwnPiece);
-      score += promotionBonus;
-    }
-
-    return score;
-  }
-
-  private getPromotionBonus(player: string, row: number, isOwn: boolean): number {
-    const sign = isOwn ? 1 : -1;
-    const bonus = player === 'light' ? (7 - row) * 0.1 : row * 0.1;
-    return sign * bonus;
+    return this.scoreService.evaluate(game, maximizingPlayer as Player);
   }
 
   private copyGame(game: Game): Game {

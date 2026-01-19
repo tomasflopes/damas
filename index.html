@@ -27,7 +27,15 @@
         </div>
         <span id="hint">Loading…</span>
       </header>
-      <div id="board" aria-label="Damas board"></div>
+      <div class="board-layout">
+        <aside class="score-rail" aria-label="Score breakdown">
+          <div class="score-bar-stack" id="score-bar-stack">
+            <div class="score-segment dark" id="score-dark-bar"></div>
+            <div class="score-segment light" id="score-light-bar"></div>
+          </div>
+        </aside>
+        <div id="board" aria-label="Damas board"></div>
+      </div>
     </main>
     <div id="game-end-modal" class="modal hidden">
       <div class="modal-content">

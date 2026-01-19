@@ -32,5 +32,5 @@ export function createGame(options?: {
   const turnPolicy = options?.turnPolicy ?? new AlternatingTurnPolicy();
   const startingPlayer = options?.startingPlayer ?? 'light';
 
-  return new Game(board, moveService, turnPolicy, startingPlayer, audioService);
+  return new Game(board, moveService, turnPolicy, audioService, startingPlayer);
 }

@@ -10,14 +10,15 @@ export class Game {
   private isDebugMode = false;
   private gameEnded = false;
   private winner: Player | null = null;
+  private isDraw = false;
   private aiOpponents: Map<Player, Opponent | null> = new Map();
 
   constructor(
     private readonly board: Board,
     private readonly moveService: MoveService,
     private readonly turnPolicy: TurnPolicy,
-    startingPlayer: Player = 'light',
     private readonly audioService: AudioService,
+    startingPlayer: Player = 'light',
   ) {
     this.currentPlayer = startingPlayer;
   }
@@ -44,6 +45,10 @@ export class Game {
 
   get gameWinner(): Player | null {
     return this.winner;
+  }
+
+  get isGameDraw(): boolean {
+    return this.isDraw;
   }
 
   toggleDebugMode(): boolean {
@@ -106,7 +111,13 @@ export class Game {
 
   private checkGameEnd(): void {
     if (this.gameEnded) return;
+
     if (this.currentPlayerHasValidMoves()) return;
+
+    if (this.isDrawCondition()) {
+      this.endGameAsDraw();
+      return;
+    }
 
     this.endGameWithCurrentPlayerAsLoser();
   }
@@ -126,6 +137,29 @@ export class Game {
     return false;
   }
 
+  private isDrawCondition(): boolean {
+    let lightCount = 0;
+    let darkCount = 0;
+
+    for (let row = 0; row < this.board.size; row++) {
+      for (let col = 0; col < this.board.size; col++) {
+        const piece = this.board.getPiece(row, col);
+        if (piece) {
+          if (piece.player === 'light') lightCount++;
+          else darkCount++;
+        }
+      }
+    }
+
+    return lightCount === 1 && darkCount === 1;
+  }
+
+  private endGameAsDraw(): void {
+    this.gameEnded = true;
+    this.isDraw = true;
+    this.winner = null;
+  }
+
   private endGameWithCurrentPlayerAsLoser(): void {
     this.gameEnded = true;
     this.winner = this.currentPlayer === 'light' ? 'dark' : 'light';
@@ -137,5 +171,6 @@ export class Game {
     this.currentPlayer = 'light';
     this.gameEnded = false;
     this.winner = null;
+    this.isDraw = false;
   }
 }

@@ -1,6 +1,8 @@
 import { Game } from '../game/game.js';
 import { Opponent } from '../opponent/opponent.js';
 import { PieceType } from '../pieces/pieceType.js';
+import { DamaScoreService } from '../services/score/damaScoreService.js';
+import type { ScoreService } from '../services/score/scoreService.js';
 import { Coord, MoveOption } from '../types.js';
 
 export interface GameUIConfig {
@@ -12,6 +14,8 @@ export interface GameUIConfig {
   gameModeSelectId?: string;
   aiOpponentSelectId?: string;
   applyModeButtonId?: string;
+  scoreLightBarId?: string;
+  scoreDarkBarId?: string;
 }
 
 export abstract class GameController {
@@ -30,6 +34,10 @@ export abstract class GameController {
   protected modalEl: HTMLDivElement | null;
   protected modalMessage: HTMLHeadingElement | null;
   protected resetButton: HTMLButtonElement | null;
+  protected scoreLightBar: HTMLDivElement | null;
+  protected scoreDarkBar: HTMLDivElement | null;
+
+  protected readonly scoreService: ScoreService;
 
   private readonly aiMoveDelay: number = 500;
 
@@ -39,6 +47,8 @@ export abstract class GameController {
     protected game: Game,
     config: GameUIConfig,
   ) {
+    this.scoreService = new DamaScoreService();
+
     this.boardEl = document.querySelector<HTMLDivElement>(`#${config.boardElementId}`);
     this.turnLabel = document.querySelector<HTMLSpanElement>(`#${config.turnLabelId}`);
     this.hintLabel = document.querySelector<HTMLSpanElement>(`#${config.hintLabelId}`);
@@ -56,6 +66,12 @@ export abstract class GameController {
     this.modalEl = document.querySelector<HTMLDivElement>('#game-end-modal');
     this.modalMessage = document.querySelector<HTMLHeadingElement>('#modal-message');
     this.resetButton = document.querySelector<HTMLButtonElement>('#reset-button');
+    this.scoreLightBar = config.scoreLightBarId
+      ? document.querySelector<HTMLDivElement>(`#${config.scoreLightBarId}`)
+      : null;
+    this.scoreDarkBar = config.scoreDarkBarId
+      ? document.querySelector<HTMLDivElement>(`#${config.scoreDarkBarId}`)
+      : null;
 
     this.setupEventListeners();
   }
@@ -84,17 +100,15 @@ export abstract class GameController {
       this.toggleGameModeVisibility();
     }
 
-    if (this.applyModeButton) {
+    if (this.applyModeButton)
       this.applyModeButton.addEventListener('click', () => {
         this.applyGameMode();
       });
-    }
 
-    if (this.resetButton) {
+    if (this.resetButton)
       this.resetButton.addEventListener('click', () => {
         this.resetGame();
       });
-    }
   }
 
   protected toggleGameModeVisibility(): void {
@@ -165,7 +179,22 @@ export abstract class GameController {
     }
 
     this.updateTurnLabel();
+    this.updateScorePanel();
     this.applyHighlights();
+  }
+
+  protected updateScorePanel(): void {
+    const hasScoreElements = this.scoreLightBar || this.scoreDarkBar;
+
+    if (!hasScoreElements) return;
+
+    const { light, dark } = this.scoreService.breakdown(this.game);
+    const total = Math.max(light + dark, 1);
+    const lightFlex = light / total;
+    const darkFlex = dark / total;
+
+    if (this.scoreLightBar) this.scoreLightBar.style.flex = `${lightFlex}`;
+    if (this.scoreDarkBar) this.scoreDarkBar.style.flex = `${darkFlex}`;
   }
 
   protected abstract configureSquare(square: HTMLButtonElement, row: number, col: number): void;
@@ -204,9 +233,14 @@ export abstract class GameController {
   protected updateTurnLabel(): void {
     if (this.turnLabel) {
       if (this.game.hasEnded) {
-        const winner = this.game.gameWinner === 'light' ? 'Light' : 'Dark';
-        this.turnLabel.textContent = `${winner} Wins!`;
-        this.showGameEndModal(winner);
+        if (this.game.isGameDraw) {
+          this.turnLabel.textContent = 'Draw!';
+          this.showGameEndModal('Draw!');
+        } else {
+          const winner = this.game.gameWinner === 'light' ? 'Light' : 'Dark';
+          this.turnLabel.textContent = `${winner} Wins!`;
+          this.showGameEndModal(winner);
+        }
       } else {
         this.turnLabel.textContent = this.game.player === 'light' ? 'Light' : 'Dark';
       }
@@ -215,7 +249,11 @@ export abstract class GameController {
 
   protected showGameEndModal(winner: string): void {
     if (this.modalEl && this.modalMessage) {
-      this.modalMessage.textContent = `🎉 ${winner} Wins! 🎉`;
+      if (winner === 'Draw!') {
+        this.modalMessage.textContent = "🤝 It's a Draw! 🤝";
+      } else {
+        this.modalMessage.textContent = `🎉 ${winner} Wins! 🎉`;
+      }
       this.modalEl.classList.remove('hidden');
     }
   }
