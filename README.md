@@ -44,9 +44,7 @@ A simple implementation of the game Damas (Spanish Checkers) in TypeScript.
 - Improve UI/UX
   - Animations
   - Taken pieces display
-- Draw
 - Timer
-- Move Logger
 - Add AI opponent
   - ~~Random~~
   - ~~Greedy~~

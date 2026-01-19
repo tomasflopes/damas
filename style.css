@@ -44,7 +44,7 @@ header {
 
 .board-layout {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   gap: 14px;
   align-items: start;
 }
@@ -310,4 +310,74 @@ header {
 
 #reset-button:active {
   transform: scale(0.95);
+}
+
+.moves-log {
+  display: grid;
+  gap: 10px;
+  padding: 12px 16px;
+  width: 180px;
+  background: linear-gradient(180deg, #000, #111);
+  color: #f8fafc;
+  border-radius: 10px;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  height: 100%;
+  max-height: 520px;
+  overflow-y: auto;
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease;
+}
+
+.moves-log.hidden {
+  display: none;
+}
+
+.moves-log h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#moves-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+#moves-list li {
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 2px solid var(--accent);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Courier New', monospace;
+  transition: background 150ms ease;
+}
+
+#moves-list li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#moves-list li.light-move {
+  border-left-color: #ffd166;
+}
+
+#moves-list li.dark-move {
+  border-left-color: #7dd3fc;
+}
+
+@media (max-width: 900px) {
+  .moves-log {
+    display: none;
+  }
 }

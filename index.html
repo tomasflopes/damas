@@ -14,6 +14,7 @@
           <span>Turn: <strong id="turn">Light</strong></span>
           <button id="mute" type="button" aria-pressed="false">Sound on</button>
           <button id="debug" type="button" aria-pressed="false">Debug off</button>
+          <button id="toggle-moves-log" type="button" aria-pressed="false">Moves Log</button>
         </div>
         <div class="game-mode-controls">
           <label for="game-mode">Game Mode:</label>
@@ -35,6 +36,10 @@
           </div>
         </aside>
         <div id="board" aria-label="Damas board"></div>
+        <aside class="moves-log hidden" id="moves-log" aria-label="Game moves log">
+          <h3>Moves</h3>
+          <ul id="moves-list"></ul>
+        </aside>
       </div>
     </main>
     <div id="game-end-modal" class="modal hidden">

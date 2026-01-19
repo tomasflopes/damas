@@ -36,8 +36,12 @@ export abstract class GameController {
   protected resetButton: HTMLButtonElement | null;
   protected scoreLightBar: HTMLDivElement | null;
   protected scoreDarkBar: HTMLDivElement | null;
+  protected toggleMovesLogButton: HTMLButtonElement | null;
+  protected movesLogEl: HTMLElement | null;
+  protected movesListEl: HTMLUListElement | null;
 
   protected readonly scoreService: ScoreService;
+  private moveCount: number = 0;
 
   private readonly aiMoveDelay: number = 500;
 
@@ -72,11 +76,19 @@ export abstract class GameController {
     this.scoreDarkBar = config.scoreDarkBarId
       ? document.querySelector<HTMLDivElement>(`#${config.scoreDarkBarId}`)
       : null;
+    this.toggleMovesLogButton = document.querySelector<HTMLButtonElement>('#toggle-moves-log');
+    this.movesLogEl = document.querySelector<HTMLElement>('#moves-log');
+    this.movesListEl = document.querySelector<HTMLUListElement>('#moves-list');
 
     this.setupEventListeners();
   }
 
   private setupEventListeners(): void {
+    if (this.toggleMovesLogButton)
+      this.toggleMovesLogButton.addEventListener('click', () => {
+        this.toggleMovesLog();
+      });
+
     if (this.muteButton) {
       this.muteButton.addEventListener('click', () => {
         this.game.audio.toggleMute();
@@ -152,6 +164,36 @@ export abstract class GameController {
     this.debugButton.setAttribute('aria-pressed', String(isDebug));
     this.debugButton.textContent = isDebug ? 'Debug On' : 'Debug Off';
     this.render();
+  }
+
+  protected toggleMovesLog(): void {
+    if (!this.movesLogEl || !this.toggleMovesLogButton) return;
+    this.movesLogEl.classList.toggle('hidden');
+    const isVisible = !this.movesLogEl.classList.contains('hidden');
+    this.toggleMovesLogButton.setAttribute('aria-pressed', String(isVisible));
+  }
+
+  protected addMoveToLog(from: Coord, to: Coord, player: 'light' | 'dark'): void {
+    if (!this.movesListEl) return;
+
+    this.moveCount++;
+    const moveText = `${this.moveCount}. ${this.coordToString(from)} → ${this.coordToString(to)}`;
+
+    const li = document.createElement('li');
+    li.textContent = moveText;
+    li.classList.add(player === 'light' ? 'light-move' : 'dark-move');
+
+    this.movesListEl.appendChild(li);
+
+    if (this.movesListEl.parentElement) {
+      this.movesListEl.parentElement.scrollTop = this.movesListEl.parentElement.scrollHeight;
+    }
+  }
+
+  private coordToString(coord: Coord): string {
+    const col = String.fromCharCode(65 + coord.col);
+    const row = this.game.size - coord.row;
+    return `${col}${row}`;
   }
 
   protected render(): void {
@@ -269,6 +311,10 @@ export abstract class GameController {
     this.selected = null;
     this.validTargets = [];
     this.lastMovedTo = null;
+    this.moveCount = 0;
+    if (this.movesListEl) {
+      this.movesListEl.innerHTML = '';
+    }
     this.game.reset();
     this.render();
     this.setHint('Light begins.');
@@ -382,6 +428,7 @@ export abstract class GameController {
   protected executeMove(from: Coord, move: MoveOption): void {
     const movingPiece = this.game.getPiece(from.row, from.col);
     const wasKing = movingPiece?.type === PieceType.KING;
+    const currentPlayer = this.game.player;
 
     if (move.captured) {
       const captures = Array.isArray(move.captured) ? move.captured : [move.captured];
@@ -402,6 +449,7 @@ export abstract class GameController {
           this.game.audio.playPromotion();
         }
 
+        this.addMoveToLog(from, move.to, currentPlayer);
         this.lastMovedTo = move.to;
         this.selected = null;
         this.validTargets = [];
@@ -418,6 +466,7 @@ export abstract class GameController {
         this.game.audio.playPromotion();
       }
 
+      this.addMoveToLog(from, move.to, currentPlayer);
       this.lastMovedTo = move.to;
       this.selected = null;
       this.validTargets = [];
