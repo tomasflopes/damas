@@ -14,8 +14,9 @@ export class DamaScoreService implements ScoreService {
 
     const { light, dark } = this.breakdown(game);
     const self = player === 'light' ? light : dark;
-    const opp = player === 'light' ? dark : light;
-    return self - opp;
+    const opponent = player === 'light' ? dark : light;
+
+    return self - opponent;
   }
 
   breakdown(game: Game): ScoreBreakdown {
@@ -28,8 +29,7 @@ export class DamaScoreService implements ScoreService {
         if (!piece) continue;
 
         const base = piece.type === 'king' ? this.kingValue : this.pawnValue;
-        const advanceBonus = this.pawnAdvanceBonus(piece.player, piece.type, row);
-        const value = base + advanceBonus;
+        const value = base + this.pawnAdvanceBonus(piece.player, piece.type, row);
 
         if (piece.player === 'light') light += value;
         else dark += value;

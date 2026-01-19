@@ -8,15 +8,6 @@ export interface ScoreBreakdown {
 }
 
 export interface ScoreService {
-  /**
-   * Returns a signed score from the perspective of `player`.
-   * Positive favors `player`, negative favors the opponent.
-   * Non-terminal games return finite scores; terminal games may return +/-Infinity.
-   */
   evaluate(game: Game, player: Player): number;
-
-  /**
-   * Returns an absolute breakdown for UI/visualization (e.g., side bars).
-   */
   breakdown(game: Game): ScoreBreakdown;
 }
