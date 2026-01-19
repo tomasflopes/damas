@@ -7,7 +7,7 @@ export class MinimaxOpponent implements Opponent {
   private readonly kingValue: number = 3;
   private readonly pawnValue: number = 1;
 
-  constructor(private readonly maxDepth: number = 4) {
+  constructor(private readonly maxDepth: number = 5) {
     this.maxDepth = maxDepth;
   }
 
