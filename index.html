@@ -29,13 +29,15 @@
         <span id="hint">Loading…</span>
       </header>
       <div class="board-layout">
-        <aside class="score-rail" aria-label="Score breakdown">
+        <aside>
           <div class="score-bar-stack" id="score-bar-stack">
             <div class="score-segment dark" id="score-dark-bar"></div>
             <div class="score-segment light" id="score-light-bar"></div>
           </div>
         </aside>
+        <div class="captured-grid" id="captured-by-light"></div>
         <div id="board" aria-label="Damas board"></div>
+        <div class="captured-grid" id="captured-by-dark"></div>
         <aside class="moves-log hidden" id="moves-log" aria-label="Game moves log">
           <h3>Moves</h3>
           <ul id="moves-list"></ul>

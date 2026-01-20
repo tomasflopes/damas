@@ -39,9 +39,13 @@ export abstract class GameController {
   protected toggleMovesLogButton: HTMLButtonElement | null;
   protected movesLogEl: HTMLElement | null;
   protected movesListEl: HTMLUListElement | null;
+  protected capturedByLightEl: HTMLElement | null;
+  protected capturedByDarkEl: HTMLElement | null;
 
   protected readonly scoreService: ScoreService;
   private moveCount: number = 0;
+  private capturedByLight: number = 0;
+  private capturedByDark: number = 0;
 
   private readonly aiMoveDelay: number = 500;
 
@@ -79,6 +83,8 @@ export abstract class GameController {
     this.toggleMovesLogButton = document.querySelector<HTMLButtonElement>('#toggle-moves-log');
     this.movesLogEl = document.querySelector<HTMLElement>('#moves-log');
     this.movesListEl = document.querySelector<HTMLUListElement>('#moves-list');
+    this.capturedByLightEl = document.querySelector<HTMLElement>('#captured-by-light');
+    this.capturedByDarkEl = document.querySelector<HTMLElement>('#captured-by-dark');
 
     this.setupEventListeners();
   }
@@ -196,6 +202,32 @@ export abstract class GameController {
     return `${col}${row}`;
   }
 
+  protected addCapturedPiece(capturedPlayer: 'light' | 'dark'): void {
+    if (capturedPlayer === 'light') {
+      this.capturedByDark++;
+      this.updateCapturedDisplay(this.capturedByDarkEl, this.capturedByDark, 'light');
+    } else {
+      this.capturedByLight++;
+      this.updateCapturedDisplay(this.capturedByLightEl, this.capturedByLight, 'dark');
+    }
+  }
+
+  private updateCapturedDisplay(
+    containerEl: HTMLElement | null,
+    count: number,
+    pieceColor: 'light' | 'dark',
+  ): void {
+    if (!containerEl) return;
+
+    containerEl.innerHTML = '';
+
+    for (let i = 0; i < count; i++) {
+      const pieceEl = document.createElement('div');
+      pieceEl.className = `piece ${pieceColor}`;
+      containerEl.appendChild(pieceEl);
+    }
+  }
+
   protected render(): void {
     if (!this.boardEl) return;
     this.boardEl.innerHTML = '';
@@ -237,6 +269,12 @@ export abstract class GameController {
 
     if (this.scoreLightBar) this.scoreLightBar.style.flex = `${lightFlex}`;
     if (this.scoreDarkBar) this.scoreDarkBar.style.flex = `${darkFlex}`;
+
+    // Update right side bars too
+    const rightLightBar = document.querySelector<HTMLDivElement>('#score-light-bar-right');
+    const rightDarkBar = document.querySelector<HTMLDivElement>('#score-dark-bar-right');
+    if (rightLightBar) rightLightBar.style.flex = `${lightFlex}`;
+    if (rightDarkBar) rightDarkBar.style.flex = `${darkFlex}`;
   }
 
   protected abstract configureSquare(square: HTMLButtonElement, row: number, col: number): void;
@@ -312,8 +350,16 @@ export abstract class GameController {
     this.validTargets = [];
     this.lastMovedTo = null;
     this.moveCount = 0;
+    this.capturedByLight = 0;
+    this.capturedByDark = 0;
     if (this.movesListEl) {
       this.movesListEl.innerHTML = '';
+    }
+    if (this.capturedByLightEl) {
+      this.capturedByLightEl.innerHTML = '';
+    }
+    if (this.capturedByDarkEl) {
+      this.capturedByDarkEl.innerHTML = '';
     }
     this.game.reset();
     this.render();
@@ -433,6 +479,12 @@ export abstract class GameController {
     if (move.captured) {
       const captures = Array.isArray(move.captured) ? move.captured : [move.captured];
       let delay = 0;
+
+      captures.forEach((captureCoord) => {
+        const capturedPiece = this.game.getPiece(captureCoord.row, captureCoord.col);
+
+        if (capturedPiece) this.addCapturedPiece(capturedPiece.player);
+      });
 
       this.game.movePiece(from, move.to);
 
