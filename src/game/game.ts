@@ -1,9 +1,10 @@
 import { Board } from '../board/board.js';
 import { Opponent } from '../opponent/opponent.js';
 import { Piece, Player } from '../pieces/piece.js';
+import { PieceRenderer } from '../pieces/pieceRenderer.js';
 import { AudioService } from '../services/audio/audioService.js';
 import { MoveService } from '../services/move/moveService.js';
-import { Coord, MoveOption, TurnPolicy } from '../types.js';
+import { Coord, MoveOption, PromotionPolicy, TurnPolicy } from '../types.js';
 
 export class Game {
   private currentPlayer: Player;
@@ -18,6 +19,8 @@ export class Game {
     private readonly moveService: MoveService,
     private readonly turnPolicy: TurnPolicy,
     private readonly audioService: AudioService,
+    private readonly promotionPolicy: PromotionPolicy,
+    private readonly pieceRenderer: PieceRenderer,
     startingPlayer: Player = 'light',
   ) {
     this.currentPlayer = startingPlayer;
@@ -107,6 +110,21 @@ export class Game {
     this.currentPlayer = this.turnPolicy.next(this.currentPlayer);
     this.checkGameEnd();
     return true;
+  }
+
+  promoteIfNeededAt(coord: Coord): boolean {
+    const piece = this.board.getPiece(coord.row, coord.col);
+    if (!piece) return false;
+    if (!this.promotionPolicy.shouldPromote(piece, coord.row, this.board.size)) return false;
+
+    const promotedPiece = this.pieceRenderer.create(piece.player, true);
+    this.board.setPiece(coord.row, coord.col, promotedPiece);
+    return true;
+  }
+
+  finalizeManualMove(): void {
+    this.currentPlayer = this.turnPolicy.next(this.currentPlayer);
+    this.checkGameEnd();
   }
 
   private checkGameEnd(): void {

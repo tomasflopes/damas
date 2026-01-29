@@ -48,6 +48,7 @@ export abstract class GameController {
   private capturedByDark: number = 0;
 
   private readonly aiMoveDelay: number = 500;
+  private readonly captureAnimationDelay: number = 150;
 
   protected aiOpponents: Map<string, Opponent> = new Map();
 
@@ -270,7 +271,6 @@ export abstract class GameController {
     if (this.scoreLightBar) this.scoreLightBar.style.flex = `${lightFlex}`;
     if (this.scoreDarkBar) this.scoreDarkBar.style.flex = `${darkFlex}`;
 
-    // Update right side bars too
     const rightLightBar = document.querySelector<HTMLDivElement>('#score-light-bar-right');
     const rightDarkBar = document.querySelector<HTMLDivElement>('#score-dark-bar-right');
     if (rightLightBar) rightLightBar.style.flex = `${lightFlex}`;
@@ -478,28 +478,32 @@ export abstract class GameController {
 
     if (move.captured) {
       const captures = Array.isArray(move.captured) ? move.captured : [move.captured];
-      let delay = 0;
+
+      const path: Coord[] = [from];
+      captures.forEach((captureCoord) => {
+        const lastPos = path[path.length - 1];
+        const rowDiff = captureCoord.row - lastPos.row;
+        const colDiff = captureCoord.col - lastPos.col;
+        const landingRow = captureCoord.row + (rowDiff > 0 ? 1 : -1);
+        const landingCol = captureCoord.col + (colDiff > 0 ? 1 : -1);
+        const isLandingInBounds =
+          landingRow >= 0 &&
+          landingRow < this.game.size &&
+          landingCol >= 0 &&
+          landingCol < this.game.size;
+        path.push(isLandingInBounds ? { row: landingRow, col: landingCol } : move.to);
+      });
 
       captures.forEach((captureCoord) => {
         const capturedPiece = this.game.getPiece(captureCoord.row, captureCoord.col);
-
         if (capturedPiece) this.addCapturedPiece(capturedPiece.player);
       });
 
-      this.game.movePiece(from, move.to);
+      this.animateMultiCapturePath(from, path, captures, () => {
+        const promoted = this.game.promoteIfNeededAt(move.to);
+        if (promoted && !wasKing) this.game.audio.playPromotion();
 
-      for (let i = 0; i < captures.length; i++) {
-        const captureCoord = captures[i];
-
-        this.game.audio.playCapture();
-        this.renderCapture(captureCoord);
-      }
-
-      setTimeout(() => {
-        const movedPiece = this.game.getPiece(move.to.row, move.to.col);
-        if (!wasKing && movedPiece?.type === PieceType.KING) {
-          this.game.audio.playPromotion();
-        }
+        this.game.finalizeManualMove();
 
         this.addMoveToLog(from, move.to, currentPlayer);
         this.lastMovedTo = move.to;
@@ -508,15 +512,13 @@ export abstract class GameController {
 
         this.render();
         this.processAIMove();
-      }, delay);
+      });
     } else {
       this.game.movePiece(from, move.to);
       this.game.audio.playMove();
 
-      const movedPiece = this.game.getPiece(move.to.row, move.to.col);
-      if (!wasKing && movedPiece?.type === PieceType.KING) {
-        this.game.audio.playPromotion();
-      }
+      const promoted = this.game.promoteIfNeededAt(move.to);
+      if (promoted && !wasKing) this.game.audio.playPromotion();
 
       this.addMoveToLog(from, move.to, currentPlayer);
       this.lastMovedTo = move.to;
@@ -528,15 +530,61 @@ export abstract class GameController {
     }
   }
 
+  protected animateMultiCapturePath(
+    from: Coord,
+    path: Coord[],
+    captures: Coord[],
+    onComplete: () => void,
+  ): void {
+    let stepIndex = 0;
+
+    const animateNextStep = () => {
+      if (stepIndex >= path.length - 1) {
+        onComplete();
+        return;
+      }
+
+      const currentPos = path[stepIndex];
+      const nextPos = path[stepIndex + 1];
+      const captureCoord = captures[stepIndex];
+
+      const piece = this.game.getPiece(currentPos.row, currentPos.col);
+      const nextInBounds =
+        nextPos.row >= 0 &&
+        nextPos.row < this.game.size &&
+        nextPos.col >= 0 &&
+        nextPos.col < this.game.size;
+      if (piece && nextInBounds) {
+        this.game.setPiece(nextPos.row, nextPos.col, piece);
+        this.game.setPiece(currentPos.row, currentPos.col, null);
+      }
+
+      this.render();
+
+      setTimeout(() => {
+        this.game.audio.playCapture();
+
+        this.game.setPiece(captureCoord.row, captureCoord.col, null);
+
+        this.renderCapture(captureCoord);
+
+        stepIndex++;
+
+        setTimeout(animateNextStep, this.captureAnimationDelay);
+      }, 300);
+    };
+
+    animateNextStep();
+  }
+
   protected renderCapture(coord: Coord): void {
     const square = this.boardEl?.querySelector<HTMLDivElement>(
       `[data-row="${coord.row}"][data-col="${coord.col}"]`,
     );
     if (square) {
-      const piece = square.querySelector<HTMLDivElement>('.piece');
+      const piece = square.querySelector<HTMLDivElement>('.piece-token');
       if (piece) {
         piece.classList.add('captured');
-        piece.remove();
       }
     }
   }
@@ -553,7 +601,11 @@ export abstract class GameController {
 
       const move = aiOpponent.makeMove(this.game);
       if (move) {
-        this.executeMove(move.from, { to: move.to });
+        const validMoves = this.game.getValidMoves(move.from);
+        const fullMove = validMoves.find(
+          (m) => m.to.row === move.to.row && m.to.col === move.to.col,
+        );
+        this.executeMove(move.from, fullMove ?? { to: move.to });
       }
     }, this.aiMoveDelay);
   }

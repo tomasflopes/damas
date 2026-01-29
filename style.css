@@ -159,8 +159,16 @@ header {
   transform: scale(1.03);
 }
 
+.piece-token.moving {
+  opacity: 0.8;
+}
+
 .piece-token.just-moved {
   animation: pop 200ms ease;
+}
+
+.piece-token.captured {
+  animation: fade-out 200ms ease forwards;
 }
 
 @keyframes pop {
@@ -173,6 +181,28 @@ header {
   100% {
     transform: scale(1);
   }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.square {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .square.target {
@@ -376,7 +406,7 @@ header {
   background: rgba(255, 255, 255, 0.06);
   border-left: 2px solid var(--accent);
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.95);
   font-family: 'Courier New', monospace;
   transition: background 150ms ease;
 }
